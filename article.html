@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Почему ты никогда не купишь себе дом</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0a0a;--surface:#111;--surface2:#181818;
+  --border:#222;--text:#e0dedd;--text2:#999;--text3:#555;
+  --red:#e8392a;--orange:#e8850a;--green:#2d7d4f;
+}
+html{font-size:17px;scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;line-height:1.7;-webkit-font-smoothing:antialiased}
+
+.container{max-width:740px;margin:0 auto;padding:0 24px}
+.container-wide{max-width:1060px;margin:0 auto;padding:0 24px}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:0 24px 80px;border-bottom:1px solid var(--border);position:relative;overflow:hidden}
+.hero-label{font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--red);margin-bottom:20px}
+.hero-title{font-size:clamp(38px,8vw,88px);font-weight:900;line-height:1.0;letter-spacing:-.03em;max-width:900px;margin-bottom:28px}
+.hero-title em{font-style:normal;color:var(--red)}
+.hero-sub{font-size:clamp(15px,2.2vw,19px);color:var(--text2);max-width:520px;margin-bottom:48px;line-height:1.6}
+/* HERO TIMELINE */
+.hero-timeline{display:flex;align-items:stretch;gap:0;position:relative;margin-bottom:18px}
+.hero-timeline::before{content:'';position:absolute;top:50%;left:0;right:0;height:1px;background:linear-gradient(90deg,var(--text3) 0%,var(--red) 100%);opacity:.25;transform:translateY(-50%);z-index:0}
+.ht-node{position:relative;z-index:1;text-align:center;flex:1;max-width:220px}
+.ht-node:first-child{text-align:left}
+.ht-node:last-child{text-align:right}
+.ht-year{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:10px}
+.ht-val{font-size:clamp(48px,10vw,96px);font-weight:900;line-height:.85;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.ht-node:first-child .ht-val{color:var(--text)}
+.ht-node:nth-child(2) .ht-val{color:var(--red)}
+.ht-node:last-child .ht-val{color:var(--red);opacity:.7}
+.ht-where{font-size:12px;color:var(--text3);margin-top:6px}
+.ht-unit{font-size:clamp(13px,1.8vw,16px);font-weight:400;color:var(--text3);letter-spacing:0}
+.hero-footnote{font-size:12px;color:var(--text3);line-height:1.6;max-width:520px;border-top:1px solid var(--border);padding-top:14px}
+@media(max-width:540px){.ht-node{max-width:none}}
+
+.ticker{position:absolute;top:36px;right:28px;text-align:right}
+.ticker-lbl{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:4px}
+.ticker-val{font-size:22px;font-weight:700;color:var(--red);font-variant-numeric:tabular-nums}
+.ticker-sub{font-size:11px;color:var(--text3)}
+
+/* SECTIONS */
+section{padding:80px 0;border-bottom:1px solid var(--border)}
+section:last-child{border-bottom:none}
+.sec-label{font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--red);margin-bottom:14px}
+h2{font-size:clamp(24px,3.8vw,36px);font-weight:800;letter-spacing:-.02em;line-height:1.15;margin-bottom:22px}
+h3{font-size:19px;font-weight:700;margin-bottom:10px;margin-top:36px}
+p{margin-bottom:18px}
+p:last-child{margin-bottom:0}
+strong{font-weight:600}
+
+/* CALLOUT */
+.callout{border-left:3px solid var(--red);padding:18px 22px;background:var(--surface);margin:28px 0}
+.callout-num{font-size:44px;font-weight:900;color:var(--red);line-height:1;display:block;margin-bottom:6px}
+.callout-text{font-size:14px;color:var(--text2)}
+
+/* STAT ROWS */
+.stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1px;background:var(--border);margin:32px 0}
+.stat-box{background:var(--surface);padding:24px 20px}
+.stat-box .n{font-size:38px;font-weight:900;line-height:1;margin-bottom:7px;display:block}
+.stat-box .n.red{color:var(--red)}
+.stat-box .n.orange{color:var(--orange)}
+.stat-box .n.green{color:var(--green)}
+.stat-box .l{font-size:12px;color:var(--text2)}
+
+/* FORCES */
+.force{display:grid;grid-template-columns:44px 1fr;gap:22px;align-items:start;padding:28px 0;border-bottom:1px solid var(--border)}
+.force:last-child{border-bottom:none}
+.force-num{font-size:12px;font-weight:700;color:var(--red);padding-top:3px}
+.force h3{margin-top:0}
+
+/* TABLE */
+.data-table{width:100%;border-collapse:collapse;margin:28px 0;font-size:14px}
+.data-table th{text-align:left;padding:10px 14px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);border-bottom:1px solid var(--border)}
+.data-table td{padding:13px 14px;border-bottom:1px solid #1a1a1a;color:var(--text)}
+.data-table tr:last-child td{border-bottom:none}
+.data-table .bad{color:var(--red);font-weight:600}
+.data-table .ok{color:var(--orange)}
+.data-table .good{color:var(--green)}
+
+/* CHART */
+.chart-wrap{background:var(--surface);padding:22px 22px 16px;margin:32px 0}
+.chart-title{font-size:11px;color:var(--text3);margin-bottom:14px;text-transform:uppercase;letter-spacing:.08em}
+.chart-inner{position:relative}
+
+/* CALCULATOR */
+.calc-wrap{border:1px solid var(--border);margin:32px 0;background:var(--surface)}
+.calc-hdr{padding:16px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.calc-hdr .lbl{font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--red);font-weight:600}
+.hdr-toggle{display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none}
+.hdr-toggle input[type=checkbox]{width:15px;height:15px;accent-color:var(--red);cursor:pointer;flex-shrink:0}
+.hdr-toggle span{font-size:12px;color:var(--text2);white-space:nowrap}
+.lifestyle-toggle{display:inline-flex!important;align-items:center;gap:10px;cursor:pointer;user-select:none;padding:9px 14px;border:1px solid var(--border);background:var(--surface2);line-height:1;transition:border-color .15s,background .15s;font-size:13px;letter-spacing:normal;text-transform:none;color:var(--text2);margin-bottom:0}
+.lifestyle-toggle:hover{border-color:var(--text3);background:#1c1c1c}
+.lifestyle-toggle input[type=checkbox]{position:absolute;opacity:0;width:0;height:0;pointer-events:none}
+.lifestyle-box{width:16px;height:16px;border:1.5px solid var(--text3);border-radius:3px;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:background .15s,border-color .15s}
+.lifestyle-toggle input:checked ~ .lifestyle-box{background:var(--red);border-color:var(--red)}
+.lifestyle-check{display:none;width:9px;height:9px}
+.lifestyle-toggle input:checked ~ .lifestyle-box .lifestyle-check{display:block}
+.lifestyle-toggle-text{font-size:13px;color:var(--text2);white-space:nowrap;line-height:1}
+.tip{position:relative;display:inline-flex;align-items:center;flex-shrink:0}
+.tip-icon{width:15px;height:15px;border-radius:50%;background:transparent;border:1px solid var(--border);color:var(--text3);font-size:10px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;cursor:default;flex-shrink:0;line-height:1;transition:border-color .15s}
+.tip:hover .tip-icon{border-color:var(--text3)}
+.tip-box{display:none;position:absolute;right:0;top:calc(100% + 6px);width:240px;max-width:240px;background:var(--bg);border:1px solid var(--border);padding:12px 14px;font-size:11px;color:var(--text2);line-height:1.6;z-index:100;white-space:normal!important;word-break:normal;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+.tip:hover .tip-box{display:block}
+/* CALC TABS */
+.calc-tabs{display:flex;gap:0;border-bottom:1px solid var(--border)}
+.calc-tab{flex:1;padding:11px 16px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);background:transparent;border:none;cursor:pointer;border-bottom:2px solid transparent;transition:color .15s,border-color .15s;font-family:inherit;font-weight:500}
+.calc-tab:hover{color:var(--text2)}
+.calc-tab.active{color:var(--red);border-bottom-color:var(--red)}
+/* SCENARIO TOGGLES */
+.scenario-toggles{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+.sc-toggle{display:flex;align-items:center;gap:10px;padding:8px 14px;border:1px solid var(--border);background:var(--surface2);cursor:pointer;user-select:none;transition:border-color .15s,background .15s}
+.sc-toggle:hover{border-color:var(--text3);background:#1c1c1c}
+.sc-toggle.on{border-color:var(--red);background:rgba(232,57,42,.04)}
+.sc-switch{width:32px;height:18px;border-radius:9px;background:var(--border);position:relative;transition:background .2s;flex-shrink:0}
+.sc-toggle.on .sc-switch{background:var(--red)}
+.sc-switch::after{content:'';position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:#fff;transition:transform .2s cubic-bezier(.4,0,.2,1)}
+.sc-toggle.on .sc-switch::after{transform:translateX(14px)}
+.sc-label{font-size:13px;color:var(--text2);font-weight:500}
+.sc-detail{font-size:11px;color:var(--text3)}
+/* ADVANCED CONTROLS */
+.adv-controls{display:none;border-top:1px solid var(--border);padding-top:18px;margin-bottom:18px}
+.adv-controls.on{display:block}
+.adv-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+@media(max-width:540px){.adv-grid{grid-template-columns:1fr}}
+/* OVERPAY BLOCK */
+.overpay-block{display:none;margin-top:18px;padding:16px 18px;background:var(--bg);border:1px solid var(--border)}
+.overpay-block.on{display:block}
+.overpay-title{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:12px}
+.overpay-row{display:flex;justify-content:space-between;padding:7px 0;font-size:14px;border-bottom:1px solid #1a1a1a}
+.overpay-row:last-child{border-bottom:none;font-weight:700;padding-top:10px}
+.overpay-row .ov-l{color:var(--text2)}
+.overpay-row .ov-v{font-variant-numeric:tabular-nums}
+/* RENT BLOCK */
+.rent-block{display:none;margin-top:14px;padding:16px 18px;background:var(--bg);border:1px solid var(--border)}
+.rent-block.on{display:block}
+.rent-title{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:12px}
+.rent-compare{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border)}
+.rent-item{background:var(--surface2);padding:14px 16px}
+.rent-item .ri-l{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+.rent-item .ri-v{font-size:20px;font-weight:700;font-variant-numeric:tabular-nums}
+.rent-verdict{margin-top:12px;font-size:13px;color:var(--text2);line-height:1.6}
+.calc-body{padding:24px}
+.calc-inputs{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
+@media(max-width:540px){.calc-inputs{grid-template-columns:1fr}}
+.cf label{display:block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:7px}
+.cf select,.cf input:not([type=checkbox]){width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:10px 14px;font-size:15px;font-family:inherit;outline:none;-webkit-appearance:none;border-radius:0;transition:border-color .15s}
+.cf select{display:none}
+.cf input:focus{border-color:var(--red)}
+/* custom dropdown */
+.cdd{position:relative;width:100%}
+.cdd-trigger{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:10px 14px;font-size:15px;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;transition:border-color .15s;user-select:none}
+.cdd-trigger:hover{border-color:var(--text3)}
+.cdd.open .cdd-trigger{border-color:var(--red)}
+.cdd-arrow{width:10px;height:10px;flex-shrink:0;opacity:.35;transition:transform .2s cubic-bezier(.4,0,.2,1),opacity .15s}
+.cdd.open .cdd-arrow{transform:rotate(180deg);opacity:.7}
+.cdd-panel{position:absolute;top:calc(100% + 3px);left:0;right:0;background:var(--bg);border:1px solid var(--border);max-height:300px;overflow-y:auto;z-index:100;opacity:0;visibility:hidden;transform:translateY(-6px);transition:opacity .18s,transform .18s,visibility .18s;scrollbar-width:thin;scrollbar-color:var(--border) transparent;box-shadow:0 12px 32px rgba(0,0,0,.55)}
+.cdd-panel::-webkit-scrollbar{width:4px}
+.cdd-panel::-webkit-scrollbar-track{background:transparent}
+.cdd-panel::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.cdd.open .cdd-panel{opacity:1;visibility:visible;transform:translateY(0)}
+.cdd-opt{padding:10px 14px;font-size:14px;cursor:pointer;color:var(--text2);transition:background .08s,color .08s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cdd-opt:hover{background:var(--surface2);color:var(--text)}
+.cdd-opt.active{color:var(--red);background:rgba(232,57,42,.04)}
+/* RESULTS GRID */
+.calc-results{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1px;background:var(--border);margin-bottom:0}
+.calc-results-wrap{border-top:1px solid var(--border);padding-top:24px}
+.cr-item{background:var(--surface2);padding:16px 18px;display:flex;flex-direction:column;justify-content:space-between}
+.cr-item .cr-lbl{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+.cr-item .cr-val{font-size:22px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.02em;margin-top:auto}
+.cr-item .cr-val.danger{color:var(--red)}
+.cr-item .cr-val.warning{color:var(--orange)}
+.cr-item .cr-val.ok{color:var(--green)}
+.calc-growth{padding:16px 18px;background:#100000;border:1px solid #3a1010;display:none;margin-top:14px}
+.calc-growth.on{display:block}
+.calc-growth .verdict{font-size:18px;font-weight:700;color:var(--red);margin-bottom:6px}
+.calc-growth .expl{font-size:13px;color:var(--text2);line-height:1.6}
+/* JOURNEY */
+.journey-section{margin-top:24px;border-top:1px solid var(--border);padding-top:20px}
+.journey-section-lbl{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);margin-bottom:14px}
+.journey{margin:0 0 14px}
+.journey-bar{display:flex;height:52px;border:1px solid var(--border);overflow:hidden}
+.j-save{background:#0d2a0d;border-right:2px solid #2d7d4f;display:flex;align-items:center;justify-content:center;min-width:60px;transition:width .3s}
+.j-mort{background:#2a0606;display:flex;align-items:center;justify-content:center;min-width:40px}
+.j-lbl{font-size:11px;text-align:center;padding:0 10px;line-height:1.3;overflow:hidden;font-weight:500}
+.j-save .j-lbl{color:#6abf6a}
+.j-mort .j-lbl{color:#e87070}
+.journey-dates{display:flex;justify-content:space-between;margin-top:8px;gap:8px;flex-wrap:wrap}
+.journey-dates span{font-size:11px;color:var(--text3)}
+.journey-dates .jd-buy{color:#6abf6a}
+.journey-dates .jd-paid{color:var(--red)}
+.journey-totals{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1px;background:var(--border);margin-top:16px}
+.jt-box{background:var(--surface2);padding:14px 16px;display:flex;flex-direction:column}
+.jt-box .jt-l{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px}
+.jt-box .jt-v{font-size:18px;font-weight:700;font-variant-numeric:tabular-nums;margin-top:auto}
+.jt-box .jt-v.red{color:var(--red)}
+.jt-box .jt-v.grn{color:var(--green)}
+.journey-never{padding:16px 18px;background:#0d0d0d;border:1px solid #3a1010;font-size:14px;color:var(--red);font-weight:500}
+/* JOURNEY CHART */
+.journey-chart-wrap{position:relative;height:220px;margin-top:18px}
+
+/* PULL QUOTE */
+.pull{font-size:clamp(19px,3vw,27px);font-weight:700;line-height:1.35;padding:36px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin:44px 0}
+
+/* FINALE */
+.finale{padding:100px 0 120px}
+.finale-lines{font-size:clamp(18px,2.8vw,26px);line-height:2.1;color:var(--text2)}
+.finale-lines span{display:block}
+.finale-lines .dash{color:var(--text3);margin-right:8px}
+.finale-lines .bold{color:var(--text);font-weight:700}
+.finale-ellipsis{margin-top:28px;font-size:clamp(15px,2.2vw,20px);color:var(--red);font-style:italic}
+
+/* EPILOGUE */
+.epilogue-tag{display:inline-block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);border:1px solid var(--border);padding:4px 10px;margin-bottom:28px}
+.source-note{font-size:12px;color:var(--text3);border-top:1px solid var(--border);padding-top:14px;margin-top:36px;line-height:1.8}
+.source-note li{break-inside:avoid;margin-bottom:4px}
+.source-note a{color:var(--text2);text-decoration:underline;text-decoration-color:var(--border)}
+.source-note a:hover{color:var(--text);text-decoration-color:var(--text2)}
+
+@media(max-width:768px){
+  section{padding:56px 0}
+  .force{grid-template-columns:1fr}
+  .force-num{display:none}
+  .ticker{display:none}
+  .calc-hdr{padding:14px 18px}
+  .calc-body{padding:18px}
+  .cr-item{padding:12px 14px}
+  .cr-item .cr-val{font-size:18px}
+  .cdd-panel{max-height:240px}
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="ticker">
+    <div class="ticker-lbl">Мадрид, квартира 60м² дорожает</div>
+    <div class="ticker-val" id="ticker">$0.00</div>
+    <div class="ticker-sub">пока ты читаешь эту страницу</div>
+  </div>
+  <div style="max-width:1060px;margin:0 auto;width:100%">
+    <div class="hero-label">Аналитика · Март 2026</div>
+    <h1 class="hero-title">Почему ты <em>никогда</em><br>не купишь себе дом</h1>
+    <p class="hero-sub">Тебе обещали: работай и будет квартира.<br>Давай посчитаем.</p>
+    <div class="hero-timeline">
+      <div class="ht-node">
+        <div class="ht-year">1985</div>
+        <div class="ht-val">3 <span class="ht-unit">года</span></div>
+        <div class="ht-where">весь мир</div>
+      </div>
+      <div class="ht-node">
+        <div class="ht-year">2025</div>
+        <div class="ht-val" style="position:relative">23 <span class="ht-unit">года</span><span style="position:absolute;top:10px;left:calc(100% - 70px);font-size:10px;font-weight:600;color:var(--red);opacity:0.5;padding:2px 7px;letter-spacing:0;white-space:nowrap;line-height:1.4">+25 лет ипотеки</span></div>
+        <div class="ht-where">Мадрид</div>
+      </div>
+      <div class="ht-node">
+        <div class="ht-year">2045</div>
+        <div class="ht-val">∞</div>
+        <div class="ht-where">прогноз</div>
+      </div>
+    </div>
+    <div class="hero-footnote">Столько копить только на первый взнос ипотеки.<br>После взноса - ещё 20–30 лет выплат.</div>
+  </div>
+</div>
+
+<!-- CALCULATOR -->
+<section id="calc-section">
+<div class="container">
+  <div class="sec-label">Начни с себя</div>
+  <h2>Посчитай свой город</h2>
+  <p>Прежде чем продолжать - посмотри сам. Введи данные. Потом включи галочку.</p>
+
+  <div class="calc-wrap">
+    <div class="calc-hdr">
+      <span class="lbl">Калькулятор доступности жилья</span>
+      <label class="hdr-toggle" style="margin-left:auto">
+        <input type="checkbox" id="growthToggle">
+        <span>Учитывать рост цен</span>
+        <span class="tip">
+          <span class="tip-icon">?</span>
+          <span class="tip-box">Каждый год цена квартиры растёт на указанный % роста цен. Цель накопления пересчитывается ежегодно — как в реальной жизни. Без галочки цена зафиксирована.</span>
+        </span>
+      </label>
+    </div>
+    <div class="calc-tabs">
+      <button class="calc-tab active" data-tab="simple">Простой</button>
+      <button class="calc-tab" data-tab="advanced">Подробный</button>
+    </div>
+    <div class="calc-body">
+      <div class="calc-inputs">
+        <div class="cf">
+          <label>Город</label>
+          <select id="citySelect">
+            <option value="madrid">Мадрид 🇪🇸</option>
+            <option value="barcelona">Барселона 🇪🇸</option>
+            <option value="valencia">Валенсия 🇪🇸</option>
+            <option value="lisbon">Лиссабон 🇵🇹</option>
+            <option value="berlin">Берлин 🇩🇪</option>
+            <option value="munich">Мюнхен 🇩🇪</option>
+            <option value="london">Лондон 🇬🇧</option>
+            <option value="amsterdam">Амстердам 🇳🇱</option>
+            <option value="warsaw">Варшава 🇵🇱</option>
+            <option value="prague">Прага 🇨🇿</option>
+            <option value="newyork">Нью-Йорк 🇺🇸</option>
+            <option value="chicago">Чикаго 🇺🇸</option>
+            <option value="moscow">Москва 🇷🇺</option>
+            <option value="dubai">Дубай 🇦🇪</option>
+            <option value="singapore">Сингапур 🇸🇬</option>
+            <option value="budapest">Будапешт 🇭🇺</option>
+            <option value="belgrade">Белград 🇷🇸</option>
+            <option value="austin">Остин 🇺🇸</option>
+            <option value="losangeles">Лос-Анджелес 🇺🇸</option>
+            <option value="tbilisi">Тбилиси 🇬🇪</option>
+            <option value="almaty">Алматы 🇰🇿</option>
+          </select>
+        </div>
+        <div class="cf">
+          <label>Твоя зарплата нетто ($/мес)</label>
+          <input type="number" id="salaryInput" value="1771" min="100" max="99999">
+        </div>
+        <div class="cf">
+          <label>Срок ипотеки</label>
+          <select id="mortYearsSelect">
+            <option value="10">10 лет</option>
+            <option value="15">15 лет</option>
+            <option value="20">20 лет</option>
+            <option value="25" selected>25 лет</option>
+            <option value="30">30 лет</option>
+          </select>
+        </div>
+        <div style="grid-column:1/-1;display:flex;gap:12px;flex-wrap:wrap">
+          <label class="lifestyle-toggle">
+            <input type="checkbox" id="lifestyleToggle">
+            <span class="lifestyle-box">
+              <svg class="lifestyle-check" viewBox="0 0 9 9" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <polyline points="1.5,4.5 3.5,6.5 7.5,2" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <span class="lifestyle-toggle-text">Учитывать нормальную жизнь</span>
+            <span class="tip">
+              <span class="tip-icon">?</span>
+              <span class="tip-box">+20% от зарплаты на одежду, рестораны, путешествия, спорт и т.д. Без этого расчёт предполагает режим выживания.</span>
+            </span>
+          </label>
+        </div>
+      </div>
+
+      <!-- ADVANCED CONTROLS -->
+      <div class="adv-controls" id="advControls">
+        <div class="scenario-toggles">
+          <div class="sc-toggle" id="partnerToggle" onclick="this.classList.toggle('on');updateCalc()">
+            <div class="sc-switch"></div>
+            <div><div class="sc-label">+Партнёр</div><div class="sc-detail">+67% доход, +35% расходы</div></div>
+          </div>
+          <div class="sc-toggle" id="childToggle" onclick="this.classList.toggle('on');updateCalc()">
+            <div class="sc-switch"></div>
+            <div><div class="sc-label">+Ребёнок</div><div class="sc-detail">+$450/мес расходы</div></div>
+          </div>
+        </div>
+        <div class="adv-grid">
+          <div class="cf">
+            <label>Норма сбережений</label>
+            <select id="savingsRateSelect" onchange="updateCalc()">
+              <option value="100">100% остатка</option>
+              <option value="80">80% остатка</option>
+              <option value="60">60% остатка</option>
+              <option value="50">50% остатка</option>
+            </select>
+          </div>
+          <div class="cf">
+            <label>Ипотечная ставка (%)</label>
+            <input type="number" id="rateInput" step="0.1" min="0" max="50" oninput="updateCalc()">
+          </div>
+          <div style="grid-column:1/-1;display:flex">
+            <label class="lifestyle-toggle">
+              <input type="checkbox" id="closingToggle" checked onchange="updateCalc()">
+              <span class="lifestyle-box">
+                <svg class="lifestyle-check" viewBox="0 0 9 9" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <polyline points="1.5,4.5 3.5,6.5 7.5,2" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+              <span class="lifestyle-toggle-text">Учитывать расходы на сделку</span>
+              <span class="tip">
+                <span class="tip-icon">?</span>
+                <span class="tip-box">Налоги, нотариус, регистрация и т.д. Для выбранного города: <span id="closingPct"></span>% от цены квартиры.</span>
+              </span>
+            </label>
+          </div>
+        </div>
+        <div id="rateHint" style="font-size:11px;color:var(--text3);margin-top:-8px;margin-bottom:10px"></div>
+      </div>
+
+      <div class="calc-results" id="calcResults"></div>
+
+      <!-- JOURNEY - always visible -->
+      <div class="journey-section">
+        <div class="journey-section-lbl">Твой полный путь до собственного жилья</div>
+        <div id="journeyContent"></div>
+        <div class="journey-chart-wrap" id="journeyChartWrap" style="display:none">
+          <canvas id="journeyChart"></canvas>
+        </div>
+      </div>
+
+      <div id="growthLblWrap" style="margin-top:16px;font-size:13px;color:var(--text3);line-height:1.5"></div>
+
+      <div class="calc-growth" id="calcGrowth">
+        <div class="verdict" id="growthVerdict"></div>
+        <div class="expl" id="growthExpl"></div>
+      </div>
+
+      <!-- OVERPAYMENT (advanced) -->
+      <div class="overpay-block" id="overpayBlock"></div>
+
+      <!-- RENT VS BUY (advanced) -->
+      <div class="rent-block" id="rentBlock"></div>
+    </div>
+  </div>
+  <p style="color:var(--text3);font-size:13px">* Квартира 60м², центр города. Первый взнос 20%. Данные: <a href="https://www.numbeo.com/property-investment/" target="_blank" rel="noopener" style="color:var(--text3)">Numbeo Q1 2026</a>. Цены, зарплаты, аренда — март 2026.</p>
+</div>
+</section>
+
+<!-- THE PROMISE -->
+<section>
+<div class="container">
+  <div class="sec-label">Обещание</div>
+  <h2>Тебе говорили: работай - будет квартира</h2>
+  <p>Не метафорически. Буквально: устройся на нормальную работу, откладывай что можешь - и через несколько лет своя квартира. Так говорили родители, учителя, финансовые советники. Так говорят до сих пор.</p>
+  <p>Давай возьмём идеального человека. Мадрид, 2025 год. Медианная зарплата нетто: €1&nbsp;771/мес. Он не пьёт, не курит, не меняет телефон каждый год. Расходы на жизнь - строго по норме: аренда, еда, транспорт, коммуналка. Итого: ~€1&nbsp;759/мес. Остаток:</p>
+
+  <div class="callout">
+    <span class="callout-num">€12</span>
+    <div class="callout-text">Остаток медианного работника Мадрида после базовых расходов на жизнь в месяц. Это не на кафе - это весь остаток.</div>
+  </div>
+
+  <p>Квартира 60м² в центре: €481&nbsp;000<span style="font-size:11px;color:var(--text3);vertical-align:super"> €8&nbsp;022/м², Numbeo март 2026</span>. Первый взнос 20%: €96&nbsp;000. Если откладывать 20% зарплаты (~€354/мес) - это 23 года накоплений. За это время квартира подорожает ещё на 150–250% (исторический темп роста Мадрида: 3.5–5.5%/год). Финиш убегает.</p>
+  <p>Тот же Мадрид, 1998 год. P/I ≈ 9<span style="font-size:11px;color:var(--text3);vertical-align:super"> price-to-income: сколько годовых зарплат стоит квартира</span>. Квартира ~€90&nbsp;000. Первый взнос тогда был стандартно 10% — €9&nbsp;000. При той же дисциплине - ~5 лет. Купил. Та же работа. Та же дисциплина. Другая эпоха.</p>
+
+  <div class="pull">Что изменилось - люди или математика?</div>
+</div>
+</section>
+
+<!-- THREE FORCES -->
+<section>
+<div class="container">
+  <div class="sec-label">Механика</div>
+  <h2>Три силы, которые работали против тебя одновременно</h2>
+  <p>Это не один фактор. Три вещи изменились параллельно - и каждая усиливала остальные.</p>
+
+  <div style="margin-top:36px">
+    <div class="force">
+      <div class="force-num">01</div>
+      <div>
+        <h3>Цены росли в 2–10 раз быстрее зарплат</h3>
+        <p>Берлин: цена м² выросла с ~€1&nbsp;000 до €7&nbsp;374 за 25 лет (+637%). Зарплаты за то же время: +112%. Варшава: цены +1&nbsp;279%, зарплаты +439%. Разрыв между ростом цен и ростом зарплат — в 5–6 раз.</p>
+        <p>Данные OECD: Германия, реальный CAGR зарплат 2000–2010: <strong>+0.30%/год</strong>. США 2020–2024: <strong>+0.05%/год</strong>. Португалия 2010–2020: <strong>−0.03%/год</strong>. Пока цены летели вверх.</p>
+        <div class="stat-row">
+          <div class="stat-box"><span class="n red">+637%</span><span class="l">Рост цен м², Берлин 2000–2026</span></div>
+          <div class="stat-box"><span class="n orange">+112%</span><span class="l">Рост зарплат, Германия 2000–2026</span></div>
+          <div class="stat-box"><span class="n red">×6</span><span class="l">Цены росли быстрее зарплат во столько раз</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="force">
+      <div class="force-num">02</div>
+      <div>
+        <h3>Низкие ставки скрывали кризис - теперь они выросли</h3>
+        <p>С 2010 по 2020 ипотечные ставки в Европе упали с 4–5% до 1–1.5%. Это была анестезия: ежемесячный платёж оставался посильным даже когда цены удвоились. В 2022–2023 анестезия закончилась. Ставки вернулись к 3–5%. Двойной удар: цены ×2 и кредит снова дорогой.</p>
+        <p>Германия 2020: ставка 1.3%, платёж 25% дохода. Германия 2025: ставка 3.55%, платёж 45% дохода. Та же квартира, тот же доход - вдвое менее доступна.</p>
+      </div>
+    </div>
+
+    <div class="force">
+      <div class="force-num">03</div>
+      <div>
+        <h3>Структурные факторы сжимают предложение</h3>
+        <p>Испания: Airbnb убрал с рынка долгосрочной аренды <strong>57% предложения</strong> за 3 года. Иностранные покупатели платят €3&nbsp;063/м² против €1&nbsp;713/м² у местных (+79% надбавка). Дефицит нового строительства: 515–765 тысяч единиц за 2021–2024. На пике в 2007 году строили 1&nbsp;000&nbsp;000 единиц/год - в 2009–2021 среднее: <strong>64&nbsp;000/год</strong>. В 15 раз меньше.</p>
+        <p>Это не только Испания. Та же логика в Лиссабоне, Амстердаме, Дублине, Варшаве. Предложение структурно сжимается. Спрос - нет.</p>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- VALENCIA -->
+<section>
+<div class="container">
+  <div class="sec-label">Кейс: ускорение</div>
+  <h2>Валенсия: что происходит когда рынок переключает передачу</h2>
+  <p>Валенсия - не самый дорогой город. Показателен именно потому что демонстрирует нелинейность. 20 лет она была "недооценённой" - дешевле Мадрида и Барселоны. Потом что-то щёлкнуло: цифровые кочевники, солнце, дефицит долгосрочной аренды.</p>
+  <div class="stat-row">
+    <div class="stat-box"><span class="n">€1&nbsp;140</span><span class="l">Цена м² центр, Валенсия, 2015</span></div>
+    <div class="stat-box"><span class="n red">€4&nbsp;853</span><span class="l">Цена м² центр, Валенсия, Numbeo март 2026</span></div>
+    <div class="stat-box"><span class="n red">+326%</span><span class="l">Рост за 10 лет. Зарплаты: +44%</span></div>
+  </div>
+</div>
+<div class="container-wide">
+  <div class="chart-wrap">
+    <div class="chart-title">Валенсия - стоимость квартиры 60м² vs годовая зарплата (EUR)</div>
+    <div class="chart-inner" style="height:300px"><canvas id="valenciaChart"></canvas></div>
+  </div>
+</div>
+<div class="container">
+  <p>P/I Валенсии: 4.0 в 2015 году → 13.4 в 2026-м. Рост в 3.4 раза за десятилетие. Зарплаты за то же время: +44%.</p>
+  <p style="color:var(--text2)">Это паттерн, не исключение. Дубай: +20%/год. Малага: +20%/год. Варшава: ~10%/год. Будапешт: +13%/год. Амстердам: +10.8%/год. Везде одна и та же механика.</p>
+</div>
+</section>
+
+<!-- GENERATION TABLE -->
+<section>
+<div class="container">
+  <div class="sec-label">2000 vs 2025</div>
+  <h2>Твои родители купили, просто работая.<br>Не потому что они умнее.</h2>
+  <p>P/I - сколько годовых зарплат стоит квартира 60м². Чем выше - тем недоступнее. В 2000 году этот показатель был разумным в большинстве городов.</p>
+</div>
+<div class="container-wide">
+  <div class="chart-wrap">
+    <div class="chart-title">P/I ratio: 2000, 2025 и прогноз 2045 (базовый сценарий)</div>
+    <div class="chart-inner" style="height:320px"><canvas id="piChart"></canvas></div>
+  </div>
+</div>
+<div class="container">
+  <table class="data-table">
+    <thead><tr><th>Город</th><th>P/I 2000</th><th>P/I 2025</th><th>Изменение</th><th>Что это значит</th></tr></thead>
+    <tbody>
+      <tr><td>Берлин</td><td class="good">3.2</td><td class="bad">12.3</td><td class="bad">×3.8</td><td>В 4 раза тяжелее</td></tr>
+      <tr><td>Мадрид</td><td class="ok">10.0</td><td class="bad">18.1</td><td class="bad">×1.8</td><td>В 2 раза тяжелее</td></tr>
+      <tr><td>Лондон</td><td class="bad">11.7</td><td class="bad">20.4</td><td class="bad">×1.7</td><td>Поколение арендаторов</td></tr>
+      <tr><td>Лиссабон</td><td class="ok">8.0</td><td class="bad">23.9</td><td class="bad">×3.0</td><td>Расходы превышают доходы</td></tr>
+      <tr><td>Варшава</td><td class="good">5.7</td><td class="bad">14.1</td><td class="bad">×2.5</td><td>В 2.5 раза тяжелее</td></tr>
+      <tr><td>Нью-Йорк</td><td class="ok">8.0</td><td class="bad">19.2</td><td class="bad">×2.4</td><td>Аренда 85% дохода</td></tr>
+      <tr><td>Чикаго</td><td class="good">2.5</td><td class="good">3.9</td><td class="ok">×1.6</td><td>Исключение. Пока.</td></tr>
+      <tr><td>Италия / Рим</td><td class="bad">10.8</td><td class="ok">9.6</td><td class="good">−11%</td><td>Единственная страна где стало легче</td></tr>
+    </tbody>
+  </table>
+  <div class="pull">В 2000 году средний берлинец копил 3 года - и покупал. В 2026 - 12+ лет. Та же Германия. Другая математика.</div>
+  <p>Доля владельцев жилья среди 25–34 летних в Великобритании: 59% в 2003 году → 35% в 2017-м. В Испании молодёжь до 29 лет, живущая самостоятельно: 52% владельцев в 2007 → 29% в 2016-м. Средний возраст первой покупки в Великобритании вырос с ~29 лет (начало 2000-х) до ~34 лет (2020-е). В Испании - с ~34 до ~41 года.</p>
+  <p>Это не провал поколения. Это сдвиг рынка.</p>
+</div>
+</section>
+
+<!-- 2045 -->
+<section>
+<div class="container">
+  <div class="sec-label">Прогноз</div>
+  <h2>А через 20 лет?</h2>
+  <p>Экстраполяция - не предсказание. Это ответ на вопрос: что будет если продолжится то, что уже происходит? Берём реальные исторические темпы роста цен. Зарплаты - консервативно +2%/год реально. Три сценария.</p>
+</div>
+<div class="container-wide">
+  <div class="chart-wrap">
+    <div class="chart-title">P/I ratio в 2045: три сценария (рост цен vs +2%/год зарплаты, 20 лет)</div>
+    <div class="chart-inner" style="height:360px"><canvas id="forecastChart"></canvas></div>
+  </div>
+</div>
+<div class="container">
+  <div class="stat-row">
+    <div class="stat-box"><span class="n orange" style="font-size:22px;font-weight:800">Умеренный</span><span class="l">+4%/год. Мадрид P/I≈27. Только пары с двумя доходами.</span></div>
+    <div class="stat-box"><span class="n red" style="font-size:22px;font-weight:800">Базовый</span><span class="l">+6%/год. Мадрид P/I≈39. Недоступно для 80%+ одиночек.</span></div>
+    <div class="stat-box"><span class="n" style="font-size:22px;font-weight:800;color:#c0392b">Агрессивный</span><span class="l">+9%/год. Мадрид P/I≈68. Функционально невозможно.</span></div>
+  </div>
+  <p>Валенсия отдельно: при темпе +8%/год (консервативнее чем последние 3 года) - квартира €291k сегодня через 20 лет стоит €1.36M. Зарплата при +2%/год: €2&nbsp;700/мес. P/I: около 42.</p>
+  <p>Урбанизация продолжается, строить не успевают. Дефицит структурный, не цикличный. Демография в Японии создала откат - в Европе пока нет сигналов к тому же.</p>
+  <p>Есть исключения: часть городов Восточной Германии, Средний Запад США, регионы с оттоком населения. Там математика другая. Но это не та жизнь которую большинство планирует.</p>
+</div>
+</section>
+
+<!-- WHY SILENT -->
+<section>
+<div class="container">
+  <div class="sec-label">Структурная слепота</div>
+  <h2>Почему об этом не говорят</h2>
+  <p>Средний возраст члена правительства в европейской стране - 52–58 лет. Они купили жильё в 1990–2005 году. При P/I 3–8. По ставке 6–8% - но когда квартира стоила 3 годовых зарплаты, даже высокая ставка не была катастрофой.</p>
+  <p>Родители советуют: работай, копи, не трать на глупости. Для их времени это был нормальный совет. Для времени, когда P/I в Берлине был 3.2, а не 12.3. Они не лгут. Они просто не понимают что сломалось - потому что им не нужно это понимать.</p>
+  <p>Журналисты пишут о "росте рынка недвижимости" как о позитивной новости. Для тех, у кого уже есть квартира, так и есть. Медианный возраст аудитории большинства изданий - выше 40. Владельцы. Круг замкнулся.</p>
+
+  <div class="callout">
+    <span class="callout-num" style="font-size:36px">34 → 41</span>
+    <div class="callout-text">Средний возраст первой покупки жилья в Испании вырос с ~34 до ~41 года за 20 лет. В Великобритании - с ~29 до ~34 лет. Это не статистика. Это потерянное десятилетие.</div>
+  </div>
+
+  <p>Совет "работай и откладывай" - как советовать ехать на лошади по скоростной трассе. Лошадь та же. Дорога другая.</p>
+</div>
+</section>
+
+<!-- FINALE -->
+<section class="finale">
+<div class="container">
+  <div class="finale-lines">
+    <span><span class="dash">-</span>Твои родители работали и <span class="bold">купили.</span></span>
+    <span><span class="dash">-</span>Ты работаешь - и <span class="bold">снимаешь.</span></span>
+    <span><span class="dash">-</span>Их дети будут работать - и...</span>
+  </div>
+  <p class="finale-ellipsis">Математика дальше сама.</p>
+</div>
+</section>
+
+<!-- EPILOGUE -->
+<section>
+<div class="container">
+  <div class="epilogue-tag">P.S. - отдельный разбор</div>
+  <div class="sec-label">Обвал рынка</div>
+  <h2>А вдруг будет обвал?</h2>
+  <p>Возможно. Финляндия −1.9% в 2024-м. Китай −5–6%. Канада стагнирует. Но вот что важно понять:</p>
+  <p><strong>Обвал ≠ доступность.</strong></p>
+</div>
+<div class="container-wide">
+  <div class="chart-wrap">
+    <div class="chart-title">Испания 2007–2015: цены падали - люди всё равно не могли купить</div>
+    <div class="chart-inner" style="height:280px"><canvas id="spainChart"></canvas></div>
+  </div>
+</div>
+<div class="container">
+  <p>Испания 2008–2013: цены упали на 37%. Казалось бы - вот оно, окно. Но одновременно безработица выросла с 8% до <strong>26.9%</strong>. Молодёжная - 43.6%. Банки перестали давать ипотеку. У кого не было работы - не получил кредит. У кого была работа - боялся её потерять. Купить смогли те у кого были наличные. У кого наличные? У тех кто уже владел и продал на пике.</p>
+  <p>Япония 1991–2002: цены городской земли упали на 80%. CAGR −3.7%/год, 10 лет подряд. Единственный настоящий обвал в истории. Но даже в Токио квартира оставалась дорогой - просто экономика была сломана, и покупка не имела смысла.</p>
+
+  <div class="callout">
+    <span class="callout-num" style="font-size:24px;line-height:1.4">У кого наличные при обвале?</span>
+    <div class="callout-text">У тех, кто купил раньше и успел продать на пике. Круг снова замкнулся. Обвал перераспределяет активы - но не в пользу тех у кого их не было.</div>
+  </div>
+
+  <p>Окно возможности при обвале - узкое, короткое, требует наличных, нервов и готовности покупать когда все продают. Исторически обвалы не делали жильё доступным для тех кто им не владел. Никогда.</p>
+
+  <div class="source-note">
+    <div style="margin-bottom:8px;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--text3)">Источники данных · Март 2026</div>
+    <ul style="list-style:none;padding:0;margin:0;columns:2;column-gap:32px">
+      <li><a href="https://www.bis.org/statistics/rppi.htm" target="_blank" rel="noopener">BIS Residential Property Price Statistics</a> - исторические индексы цен на жильё по странам</li>
+      <li><a href="https://stats.oecd.org/index.aspx?DataSetCode=AV_AN_WAGE" target="_blank" rel="noopener">OECD Average Annual Wages (AV_AN_WAGE)</a> - реальные зарплаты в PPP USD 2022</li>
+      <li><a href="https://www.numbeo.com/property-investment/" target="_blank" rel="noopener">Numbeo Q1 2026</a> - цены м², аренда, расходы по городам</li>
+      <li><a href="https://www.gov.uk/government/statistics/english-housing-survey-2023-to-2024-experiences-of-the-housing-crisis" target="_blank" rel="noopener">English Housing Survey 2023–24</a> - доля владельцев 25–34 лет, Великобритания</li>
+      <li><a href="https://ifs.org.uk/sites/default/files/output_url_files/BN224.pdf" target="_blank" rel="noopener">IFS Briefing Note BN224</a> - поколенческий анализ доступности жилья в UK</li>
+      <li><a href="https://www.nationwide.co.uk/about/house-price-index/" target="_blank" rel="noopener">Nationwide House Price Index</a> - история цен на жильё в Великобритании</li>
+      <li><a href="https://www.ine.es/" target="_blank" rel="noopener">INE España</a> - статистика недвижимости и рынка труда Испании</li>
+      <li><a href="https://www.tinsa.es/precio-vivienda/" target="_blank" rel="noopener">Tinsa</a> - цены м² по регионам Испании и Валенсии</li>
+      <li><a href="https://www.hogaria.net/estadisticas/valencia-valencia.aspx" target="_blank" rel="noopener">Hogaria</a> - актуальные цены Валенсии (март 2026)</li>
+      <li><a href="https://wolfstreet.com/2025/08/11/average-age-of-first-time-home-buyers-and-how-it-changed-over-the-past-25-years/" target="_blank" rel="noopener">Wolf Street / NY Fed</a> - средний возраст первой покупки, США</li>
+      <li><a href="https://comptroller.nyc.gov/reports/spotlight-new-york-citys-homeowner-housing-market/" target="_blank" rel="noopener">NYC Comptroller Spotlight</a> - рынок жилья Нью-Йорка</li>
+      <li><a href="https://sdw.ecb.europa.eu/" target="_blank" rel="noopener">ECB Statistical Data Warehouse</a> - ставки Euribor 2000–2025</li>
+      <li><a href="https://en.wikipedia.org/wiki/Spanish_property_bubble" target="_blank" rel="noopener">Wikipedia: Spanish property bubble</a> - кризис 2008–2013, данные INE/BIS</li>
+      <li><a href="https://dqydj.com/historical-home-prices/" target="_blank" rel="noopener">dqydj.com</a> - медианные цены на жильё в США 2000–2024</li>
+      <li><a href="https://www.census.gov/" target="_blank" rel="noopener">US Census Bureau</a> - homeownership по возрастным группам, США</li>
+    </ul>
+  </div>
+</div>
+</section>
+
+<script>
+// ── CITY DATA ──────────────────────────────────────────────
+const CITIES = {
+  madrid:    {name:'Мадрид',    priceM2:8022,  salary:2213, expenses:1770, rate:3.0,  growth:5,  pi00:10.0, pi25:18.1, closing:14.1, rent1br:1296, rateNote:'Испания, фикс. 25 лет, ECB MFI 2025. Зарплата: Numbeo средняя'},
+  barcelona: {name:'Барселона', priceM2:6057,  salary:2080, expenses:1900, rate:3.0,  growth:5,  pi00:9.0,  pi25:14.6, closing:14.1, rent1br:1758, rateNote:'Испания, фикс. 25 лет'},
+  valencia:  {name:'Валенсия',  priceM2:4853,  salary:1817, expenses:1600, rate:3.0,  growth:10, pi00:5.0,  pi25:13.4, closing:14.1, rent1br:918,  rateNote:'Испания, фикс. 25 лет'},
+  lisbon:    {name:'Лиссабон',  priceM2:6579,  salary:1377, expenses:1855, rate:3.3,  growth:6,  pi00:8.0,  pi25:23.9, closing:13.5, rent1br:1512, rateNote:'Португалия, фикс., Banco de Portugal'},
+  berlin:    {name:'Берлин',    priceM2:7374,  salary:3004, expenses:1834, rate:3.55, growth:4,  pi00:3.2,  pi25:12.3, closing:16.5, rent1br:1393, rateNote:'Германия, фикс. 25 лет, Bundesbank'},
+  munich:    {name:'Мюнхен',    priceM2:10951, salary:4054, expenses:2200, rate:3.55, growth:4,  pi00:4.5,  pi25:13.5, closing:16.5, rent1br:1531, rateNote:'Германия, фикс. 25 лет'},
+  london:    {name:'Лондон',    priceM2:17913, salary:4400, expenses:3000, rate:4.5,  growth:4,  pi00:11.7, pi25:20.4, closing:9.6,  rent1br:2891, rateNote:'UK, фикс. 2 года, Nationwide. £3,698×1.19'},
+  amsterdam: {name:'Амстердам', priceM2:9333,  salary:4365, expenses:2444, rate:3.6,  growth:8,  pi00:6.0,  pi25:10.7, closing:7.0,  rent1br:2819, rateNote:'Нидерланды, фикс. 20 лет, DNB'},
+  warsaw:    {name:'Варшава',   priceM2:5515,  salary:1957, expenses:1448, rate:7.0,  growth:8,  pi00:5.7,  pi25:14.1, closing:12.5, rent1br:1101, rateNote:'Польша, фикс. 25 лет, NBP. 8180zł÷4.18'},
+  prague:    {name:'Прага',     priceM2:8590,  salary:1956, expenses:1562, rate:5.2,  growth:8,  pi00:4.5,  pi25:22.0, closing:10.0, rent1br:1232, rateNote:'Чехия, фикс. 5 лет, CNB. 48912Kč÷25'},
+  budapest:  {name:'Будапешт',  priceM2:4636,  salary:1362, expenses:1128, rate:7.3,  growth:9,  pi00:5.0,  pi25:17.0, closing:8.0,  rent1br:702,  rateNote:'Венгрия, рыночная, MNB'},
+  belgrade:  {name:'Белград',   priceM2:4390,  salary:1054, expenses:1058, rate:5.5,  growth:8,  pi00:6.0,  pi25:20.8, closing:8.0,  rent1br:744,  rateNote:'Сербия, рыночная'},
+  newyork:   {name:'Нью-Йорк', priceM2:20305, salary:5279, expenses:4500, rate:6.5,  growth:6,  pi00:8.0,  pi25:19.2, closing:6.4,  rent1br:4469, rateNote:'США, 30-year fixed, Freddie Mac'},
+  chicago:   {name:'Чикаго',   priceM2:3804,  salary:4835, expenses:3000, rate:6.5,  growth:5,  pi00:2.5,  pi25:3.9,  closing:6.4,  rent1br:2449, rateNote:'США, 30-year fixed'},
+  austin:    {name:'Остин',     priceM2:7115,  salary:4962, expenses:3200, rate:6.5,  growth:3,  pi00:4.0,  pi25:7.2,  closing:6.4,  rent1br:2100, rateNote:'США, 30-year fixed'},
+  losangeles:{name:'Лос-Анджелес',priceM2:8409, salary:4137, expenses:3500, rate:6.5,  growth:5,  pi00:6.0,  pi25:10.2, closing:6.4,  rent1br:2689, rateNote:'США, 30-year fixed, Numbeo март 2026'},
+  moscow:    {name:'Москва',    priceM2:9309,  salary:1462, expenses:973,  rate:28.0, growth:6,  pi00:21.7, pi25:31.8, closing:9.6,  rent1br:1246, rateNote:'Рыночная 28% (ключ. ЦБ 21% + маржа). Семейная: 6%. 64656₽÷97×1.5(Мск)'},
+  dubai:     {name:'Дубай',     priceM2:7244,  salary:3850, expenses:2500, rate:4.5,  growth:12, pi00:5.0,  pi25:9.4,  closing:7.0,  rent1br:2271, rateNote:'ОАЭ, плавающая/фикс., CBUAE'},
+  singapore: {name:'Сингапур',  priceM2:22282, salary:3965, expenses:3200, rate:3.5,  growth:4,  pi00:15.0, pi25:28.1, closing:5.0,  rent1br:2594, rateNote:'Сингапур, MAS'},
+  tbilisi:   {name:'Тбилиси',   priceM2:2365,  salary:623,  expenses:650,  rate:11.0, growth:8,  pi00:7.0,  pi25:19.0, closing:5.0,  rent1br:705,  rateNote:'Грузия, рыночная, NBG'},
+  almaty:    {name:'Алматы',    priceM2:2026,  salary:768,  expenses:700,  rate:19.5, growth:6,  pi00:5.0,  pi25:13.2, closing:5.0,  rent1br:713,  rateNote:'Казахстан, рыночная, НБРК'}
+};
+
+// ── TICKER ────────────────────────────────────────────────
+const PER_SEC = (481320 * 0.05) / (365 * 24 * 3600);
+const t0 = Date.now();
+setInterval(() => {
+  const v = ((Date.now() - t0) / 1000) * PER_SEC;
+  document.getElementById('ticker').textContent = '$' + v.toFixed(2);
+}, 100);
+
+// ── CHART DEFAULTS ────────────────────────────────────────
+Chart.defaults.color = '#666';
+Chart.defaults.borderColor = '#222';
+
+// ── HELPERS ───────────────────────────────────────────────
+function fmt(n) {
+  if (n >= 1e6) return '$' + (n/1e6).toFixed(1) + 'M';
+  if (n >= 1e3) return '$' + Math.round(n/1e3) + 'k';
+  return '$' + Math.round(n);
+}
+
+function yearsFlat(dp, annSav) {
+  return annSav > 0 ? dp / annSav : null;
+}
+
+function yearsGrowth(dp, annSav, gr) {
+  if (annSav <= 0) return null;
+  let sav = 0, target = dp, g = gr / 100;
+  for (let y = 1; y <= 100; y++) {
+    sav += annSav;
+    target *= (1 + g);
+    if (sav >= target) return y;
+  }
+  return null;
+}
+
+// ── CALCULATOR ────────────────────────────────────────────
+let journeyChartInst = null;
+const CUR_YEAR = 2026;
+
+function mortPayment(principal, annRate, years) {
+  const r = annRate / 100 / 12, n = years * 12;
+  if (r < 1e-6) return principal / n;
+  return principal * r * Math.pow(1+r,n) / (Math.pow(1+r,n) - 1);
+}
+
+function journeyHTML(yearBuy, aptNow, aptAtBuy, salary, mortPay, totalPaid, growthOn, mortYears) {
+  if (yearBuy === null) {
+    // when growth is on, calcGrowth block already shows the verdict - don't duplicate
+    if (growthOn) return '';
+    const reason = salary <= 0 ? 'Расходы превышают доходы - копить нечего.' :
+      'Первый взнос недостижим при текущей зарплате.';
+    return `<div class="journey-never">${reason}</div>`;
+  }
+  const totalYears = yearBuy + mortYears;
+  const yearBought = CUR_YEAR + yearBuy;
+  const yearPaid = yearBought + mortYears;
+  const phase1Pct = Math.max(8, Math.round(yearBuy / totalYears * 100));
+  const phase2Pct = 100 - phase1Pct;
+  const multiplier = (totalPaid / aptNow).toFixed(1);
+  const mortShare = Math.round(mortPay / salary * 100);
+  const yLabel = y => y === 1 ? 'год' : y < 5 ? 'года' : 'лет';
+
+  return `
+    <div class="journey">
+      <div class="journey-bar">
+        <div class="j-save" style="width:${phase1Pct}%">
+          <div class="j-lbl">Копишь взнос<br>${yearBuy} ${yLabel(yearBuy)}</div>
+        </div>
+        <div class="j-mort" style="width:${phase2Pct}%">
+          <div class="j-lbl">Ипотека<br>${mortYears} лет</div>
+        </div>
+      </div>
+      <div class="journey-dates">
+        <span>Сейчас · ${CUR_YEAR}</span>
+        <span class="jd-buy">Покупаешь · ${yearBought}</span>
+        <span class="jd-paid">Выплатил · ${yearPaid}</span>
+      </div>
+      <div class="journey-totals">
+        <div class="jt-box"><div class="jt-l">Платёж по ипотеке</div><div class="jt-v">${fmt(mortPay)}<span style="font-size:13px;color:var(--text2)">/мес</span></div><div style="font-size:12px;color:${mortShare>50?'var(--red)':'var(--text3)'};">${mortShare}% дохода</div></div>
+        <div class="jt-box"><div class="jt-l">Квартира на момент покупки</div><div class="jt-v">${fmt(aptAtBuy)}</div></div>
+        <div class="jt-box"><div class="jt-l">Итого выплатишь</div><div class="jt-v red">${fmt(totalPaid)}</div></div>
+        <div class="jt-box"><div class="jt-l">Переплата к цене сейчас</div><div class="jt-v red">×${multiplier}</div></div>
+        <div class="jt-box"><div class="jt-l">Квартира твоя в</div><div class="jt-v red">${yearPaid}</div></div>
+      </div>
+    </div>`;
+}
+
+function buildJourneyChart(yearBuy, aptNow, aptAtBuy, annSav, mortPay, dpActual, growthOn, growthRate, mortYears) {
+  const wrap = document.getElementById('journeyChartWrap');
+  if (journeyChartInst) { journeyChartInst.destroy(); journeyChartInst = null; }
+  if (yearBuy === null) { wrap.style.display = 'none'; return; }
+
+  wrap.style.display = 'block';
+  const totalYears = yearBuy + mortYears;
+  const gR = growthRate / 100;
+  const labels = [], savingsData = [], mortgageData = [], aptLine = [], dpTargetLine = [];
+
+  for (let y = 0; y <= totalYears; y++) {
+    labels.push(CUR_YEAR + y);
+    const aptAtY = growthOn ? aptNow * Math.pow(1 + gR, y) : aptNow;
+    aptLine.push(Math.round(aptAtY));
+    dpTargetLine.push(Math.round(aptAtY * 0.2));
+
+    if (y < yearBuy) {
+      savingsData.push(Math.round(annSav * y));
+      mortgageData.push(null);
+    } else if (y === yearBuy) {
+      savingsData.push(Math.round(dpActual));
+      mortgageData.push(Math.round(dpActual));
+    } else {
+      savingsData.push(null);
+      mortgageData.push(Math.round(dpActual + mortPay * 12 * (y - yearBuy)));
+    }
+  }
+
+  const datasets = [
+    {
+      label: 'Цена квартиры',
+      data: aptLine,
+      borderColor: growthOn ? '#e8850a' : '#444',
+      borderDash: growthOn ? [] : [4,3],
+      backgroundColor: growthOn ? 'rgba(232,133,10,0.04)' : 'transparent',
+      fill: growthOn, tension: 0.3, pointRadius: 0, borderWidth: growthOn ? 2 : 1.5,
+      order: 3
+    },
+    {
+      label: 'Взнос 20% (цель)',
+      data: dpTargetLine,
+      borderColor: '#666', borderDash: [3,3],
+      fill: false, tension: 0.3, pointRadius: 0, borderWidth: 1, order: 3
+    },
+    {
+      label: 'Накоплено',
+      data: savingsData,
+      borderColor: '#2d7d4f', backgroundColor: 'rgba(45,125,79,0.1)',
+      fill: true, tension: 0.3, pointRadius: 0, borderWidth: 2, order: 2
+    },
+    {
+      label: 'Выплачено по ипотеке',
+      data: mortgageData,
+      borderColor: '#e8392a', backgroundColor: 'rgba(232,57,42,0.07)',
+      fill: true, tension: 0.3, pointRadius: 0, borderWidth: 2, order: 2
+    }
+  ];
+
+  // Marker: current price (gray dot at year 0)
+  datasets.push({
+    label: `Цена сейчас · ${fmt(aptNow)}`,
+    data: labels.map((_, i) => i === 0 ? aptNow : null),
+    borderColor: '#888', backgroundColor: '#888',
+    pointRadius: labels.map((_, i) => i === 0 ? 5 : 0),
+    pointBorderColor: '#0a0a0a', pointBorderWidth: 2,
+    pointHoverRadius: 7, showLine: false, fill: false, order: 0
+  });
+
+  // Marker: "Купил"
+  datasets.push({
+    label: `Покупаешь · ${CUR_YEAR + yearBuy}`,
+    data: labels.map((_, i) => i === yearBuy ? Math.round(dpActual) : null),
+    borderColor: '#2d7d4f', backgroundColor: '#2d7d4f',
+    pointRadius: labels.map((_, i) => i === yearBuy ? 6 : 0),
+    pointBorderColor: '#0a0a0a', pointBorderWidth: 2,
+    pointHoverRadius: 8, showLine: false, fill: false, order: 0
+  });
+
+  // Marker: "Выплатил"
+  datasets.push({
+    label: `Выплатил · ${CUR_YEAR + totalYears}`,
+    data: labels.map((_, i) => i === totalYears ? Math.round(dpActual + mortPay * 12 * mortYears) : null),
+    borderColor: '#e8392a', backgroundColor: '#e8392a',
+    pointRadius: labels.map((_, i) => i === totalYears ? 6 : 0),
+    pointBorderColor: '#0a0a0a', pointBorderWidth: 2,
+    pointHoverRadius: 8, showLine: false, fill: false, order: 0
+  });
+
+  journeyChartInst = new Chart(document.getElementById('journeyChart').getContext('2d'), {
+    type: 'line',
+    data: { labels, datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { labels: { color: '#666', font: { size: 11 }, boxWidth: 12, padding: 10,
+          filter: item => !item.text.startsWith('Покупаешь') && !item.text.startsWith('Выплатил') && !item.text.startsWith('Цена сейчас') } },
+        tooltip: {
+          callbacks: {
+            label: ctx => {
+              if (ctx.raw === null) return null;
+              return ctx.dataset.label + ': ' + fmt(ctx.raw);
+            }
+          }
+        }
+      },
+      scales: {
+        x: { grid: { color: '#1a1a1a' }, ticks: { color: '#555', maxTicksLimit: 8, font: { size: 11 } } },
+        y: { grid: { color: '#1a1a1a' }, ticks: { color: '#555', font: { size: 11 }, callback: v => fmt(v) } }
+      }
+    }
+  });
+}
+
+// ── TAB SWITCHING ─────────────────────────────────────────
+let advancedMode = false;
+document.querySelectorAll('.calc-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.calc-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    advancedMode = tab.dataset.tab === 'advanced';
+    document.getElementById('advControls').classList.toggle('on', advancedMode);
+    document.getElementById('overpayBlock').classList.toggle('on', advancedMode);
+    document.getElementById('rentBlock').classList.toggle('on', advancedMode);
+    syncAdvInputs();
+    updateCalc();
+  });
+});
+
+function syncAdvInputs() {
+  const key = document.getElementById('citySelect').value;
+  const c = CITIES[key];
+  const rateInput = document.getElementById('rateInput');
+  if (!rateInput.dataset.touched) rateInput.value = c.rate;
+  document.getElementById('rateHint').textContent = c.rateNote || '';
+  document.getElementById('closingPct').textContent = c.closing;
+}
+
+document.getElementById('rateInput').addEventListener('input', function() {
+  this.dataset.touched = '1';
+  updateCalc();
+});
+
+function updateCalc() {
+  const key = document.getElementById('citySelect').value;
+  const c = CITIES[key];
+  let sal = parseFloat(document.getElementById('salaryInput').value) || c.salary;
+  const growthOn = document.getElementById('growthToggle').checked;
+  const lifestyleOn = document.getElementById('lifestyleToggle').checked;
+  const MORT_YEARS = parseInt(document.getElementById('mortYearsSelect').value);
+
+  // Advanced inputs
+  const hasPartner = advancedMode && document.getElementById('partnerToggle').classList.contains('on');
+  const hasChild = advancedMode && document.getElementById('childToggle').classList.contains('on');
+  const savingsRate = advancedMode ? parseInt(document.getElementById('savingsRateSelect').value) / 100 : 1;
+  const customRate = advancedMode ? parseFloat(document.getElementById('rateInput').value) : c.rate;
+  const rate = (advancedMode && !isNaN(customRate)) ? customRate : c.rate;
+  const closingOn = advancedMode && document.getElementById('closingToggle').checked;
+
+  // Income & expenses with scenarios
+  let income = sal;
+  let expenses = c.expenses;
+  if (hasPartner) { income *= 1.67; expenses *= 1.35; }
+  if (hasChild) expenses += 450;
+
+  const apt = c.priceM2 * 60;
+  const dp = apt * 0.2;
+  const closingCost = closingOn ? apt * (c.closing / 100) : 0;
+  const totalUpfront = dp + closingCost;
+  const lifestyle = lifestyleOn ? Math.round(income * 0.20) : 0;
+  const left = income - expenses - lifestyle;
+  const annSav = Math.max(left, 0) * 12 * savingsRate;
+
+  const yf = yearsFlat(totalUpfront, annSav);
+  const yg = yearsGrowth(totalUpfront, annSav, c.growth);
+
+  const mortPayNow = mortPayment(apt * 0.8, rate, MORT_YEARS);
+  const mortShare = Math.round(mortPayNow / income * 100);
+
+  // Result boxes
+  const results = [
+    {l:'Квартира 60м²', v:fmt(apt), c:''},
+    {l: closingOn ? 'Взнос + сделка' : 'Первый взнос (20%)', v:fmt(totalUpfront), c:''},
+    {l:'Остаток/мес', v: left > 0 ? fmt(left) : '−'+fmt(Math.abs(left)),
+     c: left <= 0 ? 'danger' : left < 400 ? 'warning' : 'ok'},
+    {l:'Платёж по ипотеке', v:fmt(mortPayNow)+'/мес',
+     c: mortShare > 50 ? 'danger' : mortShare > 35 ? 'warning' : 'ok'},
+    {l:'Лет на взнос', v: yf === null ? '∞' : yf < 1 ? '<1' : Math.ceil(yf)+'',
+     c: yf === null || yf > 20 ? 'danger' : yf > 10 ? 'warning' : 'ok'}
+  ];
+  if (advancedMode) {
+    results.push({l:'Ставка', v: rate.toFixed(1)+'%', c: rate > 7 ? 'danger' : rate > 5 ? 'warning' : 'ok'});
+  }
+  document.getElementById('calcResults').innerHTML = results
+    .map(x=>`<div class="cr-item"><div class="cr-lbl">${x.l}</div><div class="cr-val ${x.c}">${x.v}</div></div>`).join('');
+
+  document.getElementById('growthLblWrap').innerHTML =
+    growthOn ? `Рост цен учтён: квартира в ${c.name} дорожает на <strong style="color:var(--red)">+${c.growth}%/год</strong> пока ты копишь.` : ``;
+
+  // Journey: use growth-adjusted numbers if toggle on, flat otherwise
+  const yearBuy = growthOn ? yg : (yf !== null ? Math.ceil(yf) : null);
+  const gRate = c.growth / 100;
+  const aptAtBuy = growthOn && yearBuy !== null ? apt * Math.pow(1 + gRate, yearBuy) : apt;
+  const closingAtBuy = closingOn ? aptAtBuy * (c.closing / 100) : 0;
+  const dpAtBuy = aptAtBuy * 0.2;
+  const mortPayBuy = mortPayment(aptAtBuy * 0.8, rate, MORT_YEARS);
+  const totalMortPaid = yearBuy !== null ? mortPayBuy * MORT_YEARS * 12 : 0;
+  const totalPaid = yearBuy !== null ? (dpAtBuy + closingAtBuy + totalMortPaid) : null;
+
+  document.getElementById('journeyContent').innerHTML =
+    journeyHTML(yearBuy, apt, aptAtBuy, income, mortPayBuy, totalPaid, growthOn, MORT_YEARS);
+
+  buildJourneyChart(yearBuy, apt, aptAtBuy, annSav, mortPayBuy, dpAtBuy + closingAtBuy, growthOn, c.growth, MORT_YEARS);
+
+  // Growth verdict block
+  const gEl = document.getElementById('calcGrowth');
+  if (!growthOn) {
+    gEl.classList.remove('on');
+  } else {
+    gEl.classList.add('on');
+    const annGrowth = totalUpfront * (c.growth / 100);
+    if (yg === null) {
+      document.getElementById('growthVerdict').textContent =
+        annSav > 0 ? 'Цель убегает быстрее чем ты копишь.' : 'Копить нечего - расходы превышают доходы.';
+      if (annSav > 0) {
+        const yearCross = annSav > totalUpfront * gRate
+          ? Math.ceil(1 + Math.log(annSav / (totalUpfront * gRate)) / Math.log(1 + gRate))
+          : 1;
+        const growthAtCross = Math.round(totalUpfront * Math.pow(1 + gRate, yearCross - 1) * gRate);
+        document.getElementById('growthExpl').textContent =
+          `Сейчас взнос дорожает на ${fmt(annGrowth)}/год — ты копишь больше (${fmt(annSav)}/год). Но рост экспоненциальный: примерно через ${yearCross} ${yearCross===1?'год':yearCross<5?'года':'лет'} квартира будет дорожать на ${fmt(growthAtCross)}/год и обгонит твои сбережения навсегда.`;
+      } else {
+        document.getElementById('growthExpl').textContent =
+          `Базовые расходы (${fmt(expenses)}/мес) превышают доходы.`;
+      }
+    } else {
+      const diff = yg - Math.ceil(yf || 0);
+      const aptGrowthTotal = apt * (Math.pow(1 + gRate, yg) - 1);
+      document.getElementById('growthVerdict').textContent = `С учётом роста цен: ${yg} ${yg<5?'года':'лет'} на взнос.`;
+      document.getElementById('growthExpl').textContent =
+        `На ${diff > 0 ? diff+' '+(diff===1?'год':diff<5?'года':'лет')+' дольше' : 'столько же'}, чем без учёта роста. За это время квартира подорожает на ${fmt(aptGrowthTotal)}.`;
+    }
+  }
+
+  // ── OVERPAYMENT BLOCK (advanced only) ────────────────────
+  const ovEl = document.getElementById('overpayBlock');
+  if (advancedMode && yearBuy !== null) {
+    const principal = aptAtBuy * 0.8;
+    const interestPaid = totalMortPaid - principal;
+    let rows = `<div class="overpay-title">Структура расходов на покупку</div>`;
+    rows += `<div class="overpay-row"><span class="ov-l">Первый взнос (20%)</span><span class="ov-v">${fmt(dpAtBuy)}</span></div>`;
+    if (closingOn) rows += `<div class="overpay-row"><span class="ov-l">Расходы на сделку (${c.closing}%)</span><span class="ov-v">${fmt(closingAtBuy)}</span></div>`;
+    rows += `<div class="overpay-row"><span class="ov-l">Тело кредита</span><span class="ov-v">${fmt(principal)}</span></div>`;
+    rows += `<div class="overpay-row"><span class="ov-l">Проценты по ипотеке</span><span class="ov-v" style="color:var(--red)">${fmt(interestPaid)}</span></div>`;
+    rows += `<div class="overpay-row"><span class="ov-l">Итого выплатишь</span><span class="ov-v" style="color:var(--red)">${fmt(totalPaid)}</span></div>`;
+    const overpayPct = Math.round((totalPaid / aptAtBuy - 1) * 100);
+    rows += `<div style="margin-top:8px;font-size:12px;color:var(--text3)">Переплата: +${overpayPct}% к цене квартиры на момент покупки</div>`;
+    ovEl.innerHTML = rows;
+  } else {
+    ovEl.innerHTML = '';
+  }
+
+  // ── RENT VS BUY (advanced only) ─────────────────────────
+  const rentEl = document.getElementById('rentBlock');
+  if (advancedMode && c.rent1br > 0) {
+    const rentMonth = c.rent1br;
+    const buyMonth = mortPayNow;
+    const diff = buyMonth - rentMonth;
+    let verdictText;
+    if (diff > 0) {
+      verdictText = `Ипотека дороже аренды на ${fmt(diff)}/мес. Но ты платишь за своё, а не за чужое. Через ${MORT_YEARS} лет квартира твоя.`;
+    } else {
+      verdictText = `Ипотека дешевле аренды на ${fmt(Math.abs(diff))}/мес. Покупка выгоднее даже по ежемесячному платежу.`;
+    }
+    rentEl.innerHTML = `
+      <div class="rent-title">Аренда vs ипотека</div>
+      <div class="rent-compare">
+        <div class="rent-item"><div class="ri-l">Аренда 1BR</div><div class="ri-v">${fmt(rentMonth)}<span style="font-size:13px;color:var(--text2)">/мес</span></div></div>
+        <div class="rent-item"><div class="ri-l">Платёж по ипотеке</div><div class="ri-v" style="color:${diff>0?'var(--red)':'var(--green)'}">${fmt(buyMonth)}<span style="font-size:13px;color:var(--text2)">/мес</span></div></div>
+      </div>
+      <div class="rent-verdict">${verdictText}</div>`;
+  } else {
+    rentEl.innerHTML = '';
+  }
+}
+
+// ── CUSTOM DROPDOWNS ──────────────────────────────────────
+document.querySelectorAll('.cf select').forEach(sel => {
+  const wrap = document.createElement('div');
+  wrap.className = 'cdd';
+  const trigger = document.createElement('div');
+  trigger.className = 'cdd-trigger';
+  const trigText = document.createElement('span');
+  trigText.className = 'cdd-text';
+  const arrow = document.createElementNS('http://www.w3.org/2000/svg','svg');
+  arrow.setAttribute('class','cdd-arrow');
+  arrow.setAttribute('viewBox','0 0 10 6');
+  arrow.innerHTML = '<polyline points="1,1 5,5 9,1" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>';
+  trigger.appendChild(trigText);
+  trigger.appendChild(arrow);
+  const panel = document.createElement('div');
+  panel.className = 'cdd-panel';
+  Array.from(sel.options).forEach(opt => {
+    const d = document.createElement('div');
+    d.className = 'cdd-opt' + (opt.selected ? ' active' : '');
+    d.dataset.value = opt.value;
+    d.textContent = opt.textContent;
+    d.addEventListener('click', () => {
+      sel.value = opt.value;
+      sel.dispatchEvent(new Event('change'));
+      trigText.textContent = opt.textContent;
+      panel.querySelectorAll('.cdd-opt').forEach(o => o.classList.remove('active'));
+      d.classList.add('active');
+      wrap.classList.remove('open');
+    });
+    panel.appendChild(d);
+  });
+  const selected = sel.options[sel.selectedIndex];
+  trigText.textContent = selected ? selected.textContent : '';
+  sel.parentNode.insertBefore(wrap, sel);
+  wrap.appendChild(trigger);
+  wrap.appendChild(panel);
+  trigger.addEventListener('click', e => {
+    e.stopPropagation();
+    document.querySelectorAll('.cdd.open').forEach(c => { if(c!==wrap) c.classList.remove('open'); });
+    wrap.classList.toggle('open');
+    if(wrap.classList.contains('open')){
+      const act = panel.querySelector('.cdd-opt.active');
+      if(act) act.scrollIntoView({block:'nearest'});
+    }
+  });
+});
+document.addEventListener('click', () => document.querySelectorAll('.cdd.open').forEach(c => c.classList.remove('open')));
+
+document.getElementById('citySelect').addEventListener('change', () => {
+  const c = CITIES[document.getElementById('citySelect').value];
+  document.getElementById('salaryInput').value = c.salary;
+  document.getElementById('rateInput').value = c.rate;
+  document.getElementById('rateInput').dataset.touched = '';
+  syncAdvInputs();
+  updateCalc();
+});
+document.getElementById('salaryInput').addEventListener('input', updateCalc);
+document.getElementById('mortYearsSelect').addEventListener('change', updateCalc);
+document.getElementById('lifestyleToggle').addEventListener('change', updateCalc);
+document.getElementById('growthToggle').addEventListener('change', updateCalc);
+syncAdvInputs();
+updateCalc();
+
+// ── VALENCIA CHART ────────────────────────────────────────
+new Chart(document.getElementById('valenciaChart'), {
+  type:'line',
+  data:{
+    labels:['2015','2016','2017','2018','2019','2020','2021','2022','2023','2024','2025','2026'],
+    datasets:[
+      {label:'Квартира 60м² центр (EUR)', data:[68400,75000,88800,96000,103200,116580,125000,155000,181000,212000,248000,291000],
+       borderColor:'#e8392a', backgroundColor:'rgba(232,57,42,0.07)', fill:true, tension:0.3, pointRadius:3, borderWidth:2.5, order:2},
+      {label:'Годовая зарплата нетто (EUR)', data:[15000,15500,16000,16500,17100,17100,18000,19400,19900,20500,21100,21800],
+       borderColor:'#888', backgroundColor:'#888', borderDash:[5,3], fill:false, tension:0.3, pointRadius:4, pointBackgroundColor:'#888', pointBorderColor:'#0a0a0a', pointBorderWidth:2, borderWidth:1.5, order:1}
+    ]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{
+      legend:{labels:{color:'#888',font:{size:12},padding:14}},
+      tooltip:{callbacks:{label:c=>'€'+c.raw.toLocaleString()}}
+    },
+    scales:{
+      x:{grid:{color:'#1a1a1a'},ticks:{color:'#666'}},
+      y:{grid:{color:'#1a1a1a'},ticks:{color:'#666',callback:v=>'€'+(v/1000).toFixed(0)+'k'}}
+    }
+  }
+});
+
+// ── P/I CHART ─────────────────────────────────────────────
+const PI_CITIES = ['Берлин','Мадрид','Лондон','Лиссабон','Варшава','Нью-Йорк'];
+const pi00 = [3.2,10.0,11.7,8.0,5.7,8.0];
+const pi25 = [12.3,18.1,20.4,23.9,14.1,19.2];
+
+function projectPI(v, r) { return Math.round(v * Math.pow(1+r,20) / Math.pow(1.02,20) * 10) / 10; }
+const pi45b = pi25.map(v => projectPI(v, 0.06));
+
+new Chart(document.getElementById('piChart'), {
+  type:'bar',
+  data:{
+    labels:PI_CITIES,
+    datasets:[
+      {label:'2000', data:pi00, backgroundColor:'#2a2a2a', borderColor:'#444', borderWidth:1},
+      {label:'2025', data:pi25, backgroundColor:'#8b1a10', borderColor:'#c23020', borderWidth:1},
+      {label:'2045 базовый (+6%/год)', data:pi45b, backgroundColor:'#e8392a', borderColor:'#ff4433', borderWidth:1}
+    ]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{
+      legend:{labels:{color:'#888',font:{size:12},padding:14}},
+      tooltip:{callbacks:{label:c=>c.dataset.label+': '+c.raw+' годовых зарплат'}}
+    },
+    scales:{
+      x:{grid:{color:'#1a1a1a'},ticks:{color:'#999'}},
+      y:{grid:{color:'#1a1a1a'},ticks:{color:'#666',callback:v=>v+'x'}}
+    }
+  }
+});
+
+// ── FORECAST CHART ────────────────────────────────────────
+new Chart(document.getElementById('forecastChart'), {
+  type:'bar',
+  data:{
+    labels:PI_CITIES,
+    datasets:[
+      {label:'2025 (факт)', data:pi25, backgroundColor:'#2a2a2a', borderColor:'#444', borderWidth:1},
+      {label:'2045 умеренный (+4%/год)', data:pi25.map(v=>projectPI(v,0.04)), backgroundColor:'#7a4500', borderColor:'#e8850a', borderWidth:1},
+      {label:'2045 базовый (+6%/год)',   data:pi45b, backgroundColor:'#8b1a10', borderColor:'#c23020', borderWidth:1},
+      {label:'2045 агрессивный (+9%/год)', data:pi25.map(v=>projectPI(v,0.09)), backgroundColor:'#e8392a', borderColor:'#ff5544', borderWidth:1}
+    ]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{
+      legend:{labels:{color:'#888',font:{size:11},padding:10}},
+      tooltip:{callbacks:{label:c=>c.dataset.label+': '+c.raw+' годовых зарплат'}}
+    },
+    scales:{
+      x:{grid:{color:'#1a1a1a'},ticks:{color:'#999'}},
+      y:{grid:{color:'#1a1a1a'},ticks:{color:'#666',callback:v=>v+'x'}}
+    }
+  }
+});
+
+// ── SPAIN CRISIS CHART ────────────────────────────────────
+new Chart(document.getElementById('spainChart'), {
+  type:'line',
+  data:{
+    labels:['2007','2008','2009','2010','2011','2012','2013','2014','2015'],
+    datasets:[
+      {label:'Индекс цен (2007=100)', data:[100,91,83,77,71,65,62,62,63],
+       borderColor:'#e8850a', backgroundColor:'rgba(232,133,10,0.07)', fill:true, tension:0.3, pointRadius:4, borderWidth:2, yAxisID:'y', order:2},
+      {label:'Безработица (%)', data:[8.0,11.0,18.0,20.1,21.7,25.0,26.9,24.4,22.1],
+       borderColor:'#e8392a', fill:false, tension:0.3, pointRadius:5, pointBackgroundColor:'#e8392a', pointBorderColor:'#0a0a0a', pointBorderWidth:2, borderWidth:2, yAxisID:'y1', order:1}
+    ]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    interaction:{mode:'index',intersect:false},
+    plugins:{legend:{labels:{color:'#888',font:{size:12},padding:14}}},
+    scales:{
+      x:{grid:{color:'#1a1a1a'},ticks:{color:'#999'}},
+      y:{position:'left',grid:{color:'#1a1a1a'},ticks:{color:'#666'},
+         title:{display:true,text:'Индекс цен (2007=100)',color:'#555',font:{size:11}}},
+      y1:{position:'right',grid:{drawOnChartArea:false},ticks:{color:'#e8392a',callback:v=>v+'%'},
+          title:{display:true,text:'Безработица',color:'#e8392a',font:{size:11}}}
+    }
+  }
+});
+</script>
+</body>
+</html>
