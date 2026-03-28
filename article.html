@@ -90,7 +90,7 @@ strong{font-weight:600}
 .chart-inner{position:relative}
 
 /* CALCULATOR */
-.calc-wrap{border:1px solid var(--border);margin:32px 0;background:var(--surface)}
+.calc-wrap{border:1px solid var(--border);margin:32px 0 8px;background:var(--surface)}
 .calc-hdr{padding:16px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
 .calc-hdr .lbl{font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--red);font-weight:600}
 .hdr-toggle{display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none}
@@ -432,7 +432,7 @@ strong{font-weight:600}
       <div class="rent-block" id="rentBlock"></div>
     </div>
   </div>
-  <p style="color:var(--text3);font-size:13px">* Квартира 60м², центр города. Первый взнос 20%.<br>Данные: <a href="https://www.numbeo.com/property-investment/" target="_blank" rel="noopener" style="color:var(--text3)">Numbeo Q1 2026</a>. Цены, зарплаты, аренда, март 2026.</p>
+  <p style="color:var(--text3);font-size:13px;margin-top:8px" id="calcFootnote"></p>
 </div>
 </section>
 
@@ -690,7 +690,7 @@ const CITIES = {
   newyork:   {name:'Нью-Йорк', cur:'$', priceM2:20305, salary:5279, expenses:4500, rate:6.5,  growth:6,  pi00:8.0,  pi25:19.2, closing:6.4,  rent1br:4469, apt2000:180000, rateNote:'США, 30-year fixed, Freddie Mac'},
   chicago:   {name:'Чикаго',   cur:'$', priceM2:3804,  salary:4835, expenses:3000, rate:6.5,  growth:5,  pi00:2.5,  pi25:3.9,  closing:6.4,  rent1br:2449, apt2000:null,   rateNote:'США, 30-year fixed'},
   austin:    {name:'Остин',     cur:'$', priceM2:7115,  salary:4962, expenses:3200, rate:6.5,  growth:3,  pi00:4.0,  pi25:7.2,  closing:6.4,  rent1br:2100, apt2000:null,   rateNote:'США, 30-year fixed'},
-  losangeles:{name:'Лос-Анджелес',cur:'$', priceM2:8409, salary:4137, expenses:3500, rate:6.5,  growth:5,  pi00:6.0,  pi25:10.2, closing:6.4,  rent1br:2689, apt2000:null,   rateNote:'США, 30-year fixed, Numbeo март 2026'},
+  losangeles:{name:'Лос-Анджелес',cur:'$', priceM2:6167, salary:4137, expenses:3500, rate:6.5,  growth:6,  pi00:6.0,  pi25:10.2, closing:6.4,  rent1br:2689, apt2000:null,   rateNote:'США, 30-year fixed. Медианный дом ~$925k, Zillow 2026', house:true, defArea:150},
   moscow:    {name:'Москва',    cur:'$', priceM2:9309,  salary:1462, expenses:973,  rate:28.0, growth:6,  pi00:21.7, pi25:31.8, closing:9.6,  rent1br:1246, apt2000:39000,  rateNote:'Рыночная 28% (ключевая ЦБ 21% + маржа). Семейная: 6%'},
   dubai:     {name:'Дубай',     cur:'$', priceM2:7244,  salary:3850, expenses:2500, rate:4.5,  growth:12, pi00:5.0,  pi25:9.4,  closing:7.0,  rent1br:2271, apt2000:null,   rateNote:'ОАЭ, плавающая/фикс., CBUAE'},
   singapore: {name:'Сингапур',  cur:'$', priceM2:22282, salary:3965, expenses:3200, rate:3.5,  growth:4,  pi00:15.0, pi25:28.1, closing:5.0,  rent1br:2594, apt2000:null,   rateNote:'Сингапур, MAS'},
@@ -703,9 +703,10 @@ const CITIES = {
 const tickerKeys = Object.keys(CITIES);
 const tickerKey = tickerKeys[Math.floor(Math.random() * tickerKeys.length)];
 const tickerCity = CITIES[tickerKey];
-const tickerApt = tickerCity.priceM2 * 60;
+const tickerArea = tickerCity.defArea || 60;
+const tickerApt = tickerCity.priceM2 * tickerArea;
 const tickerPerSec = (tickerApt * tickerCity.growth / 100) / (365 * 24 * 3600);
-document.getElementById('tickerLbl').textContent = tickerCity.name + ', квартира 60м² дорожает';
+document.getElementById('tickerLbl').textContent = tickerCity.name + ', ' + (tickerCity.house ? 'дом' : 'квартира') + ' ' + tickerArea + 'м² дорожает';
 const t0 = Date.now();
 setInterval(() => {
   const v = ((Date.now() - t0) / 1000) * tickerPerSec;
@@ -963,8 +964,10 @@ function updateCalc() {
   if (hasPartner) { income *= 1.67; expenses *= 1.35; }
   if (hasChild) expenses += 450;
 
-  const area = advancedMode ? (parseInt(document.getElementById('areaInput').value) || 60) : 60;
+  const defArea = c.defArea || 60;
+  const area = advancedMode ? (parseInt(document.getElementById('areaInput').value) || defArea) : defArea;
   const apt = c.priceM2 * area;
+  const propType = c.house ? 'Дом' : 'Квартира';
   const gRate = c.growth / 100;
   const dp = apt * 0.2;
   const closingCost = closingOn ? apt * (c.closing / 100) : 0;
@@ -981,7 +984,7 @@ function updateCalc() {
 
   // Result boxes
   const results = [
-    {l:`Квартира ${area}м²`, v:fmt(apt), c:''},
+    {l:`${propType} ${area}м²`, v:fmt(apt), c:''},
     {l: closingOn ? 'Взнос + сделка' : 'Первый взнос (20%)', v:fmt(totalUpfront), c:''},
     {l:'Остаток/мес', v: left > 0 ? fmt(left) : '−'+fmt(Math.abs(left)),
      c: left <= 0 ? 'danger' : left < 400 ? 'warning' : 'ok'},
@@ -1004,10 +1007,12 @@ function updateCalc() {
     const endYear = CUR_YEAR + totalJ;
     let histLine = '';
     if (c.apt2000) {
-      histLine = `<span style="color:var(--text3);font-size:12px">Может показаться нереальным, но +${c.growth}%/год это исторический темп: в 2000 году та же квартира стоила ~${fmt(c.apt2000)}, сейчас ${fmt(apt)}. При сохранении темпа она будет стоить <strong style="color:var(--text2)">${fmt(aptEnd)}</strong> к ${endYear} году.</span>`;
+      histLine = `<span style="color:var(--text3);font-size:12px">Может показаться нереальным, но +${c.growth}%/год это исторический темп: в 2000 году та же ${propType.toLowerCase()} стоила ~${fmt(c.apt2000)}, сейчас ${fmt(apt)}. При сохранении темпа она будет стоить <strong style="color:var(--text2)">${fmt(aptEnd)}</strong> к ${endYear} году.</span>`;
+    } else {
+      histLine = `<span style="color:var(--text3);font-size:12px">При темпе +${c.growth}%/год ${propType.toLowerCase()} за ${fmt(apt)} сегодня будет стоить <strong style="color:var(--text2)">${fmt(aptEnd)}</strong> к ${endYear} году.</span>`;
     }
     document.getElementById('growthLblWrap').innerHTML =
-      `Рост цен учтён: квартира в ${c.name} дорожает на <strong style="color:var(--red)">+${c.growth}%/год</strong> пока ты копишь.`;
+      `Рост цен учтён: ${propType.toLowerCase()} в ${c.name} дорожает на <strong style="color:var(--red)">+${c.growth}%/год</strong> пока ты копишь.`;
     document.getElementById('growthHist').innerHTML = yearBuy !== null ? histLine.replace('<br>','') : '';
   } else {
     document.getElementById('growthLblWrap').innerHTML = '';
@@ -1098,6 +1103,11 @@ function updateCalc() {
   } else {
     rentEl.innerHTML = '';
   }
+
+  // Footnote
+  const fnBase = `* ${propType} ${area}м², центр города. Первый взнос 20%.<br>Данные: <a href="https://www.numbeo.com/property-investment/" target="_blank" rel="noopener" style="color:var(--text3)">Numbeo Q1 2026</a>. Цены, зарплаты, аренда, март 2026.`;
+  const fnExtra = c.house ? `<br>Цены на дома: <a href="https://www.zillow.com/home-values/12447/los-angeles-ca/" target="_blank" rel="noopener" style="color:var(--text3)">Zillow 2026</a>, медианный дом ~$925k.` : '';
+  document.getElementById('calcFootnote').innerHTML = fnBase + fnExtra;
 }
 
 // ── CUSTOM DROPDOWNS ──────────────────────────────────────
@@ -1151,6 +1161,7 @@ document.addEventListener('click', () => document.querySelectorAll('.cdd.open').
 document.getElementById('citySelect').addEventListener('change', () => {
   const c = CITIES[document.getElementById('citySelect').value];
   document.getElementById('salaryInput').value = c.salary;
+  document.getElementById('areaInput').value = c.defArea || 60;
   document.getElementById('rateInput').value = c.rate;
   document.getElementById('rateInput').dataset.touched = '';
   syncAdvInputs();
