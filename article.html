@@ -245,8 +245,8 @@ strong{font-weight:600}
 <!-- HERO -->
 <div class="hero">
   <div class="ticker">
-    <div class="ticker-lbl">Мадрид, квартира 60м² дорожает</div>
-    <div class="ticker-val" id="ticker">$0.00</div>
+    <div class="ticker-lbl" id="tickerLbl"></div>
+    <div class="ticker-val" id="ticker"></div>
     <div class="ticker-sub">пока ты читаешь эту страницу</div>
   </div>
   <div style="max-width:1060px;margin:0 auto;width:100%">
@@ -700,11 +700,16 @@ const CITIES = {
 };
 
 // ── TICKER ────────────────────────────────────────────────
-const PER_SEC = (481320 * 0.05) / (365 * 24 * 3600);
+const tickerKeys = Object.keys(CITIES);
+const tickerKey = tickerKeys[Math.floor(Math.random() * tickerKeys.length)];
+const tickerCity = CITIES[tickerKey];
+const tickerApt = tickerCity.priceM2 * 60;
+const tickerPerSec = (tickerApt * tickerCity.growth / 100) / (365 * 24 * 3600);
+document.getElementById('tickerLbl').textContent = tickerCity.name + ', квартира 60м² дорожает';
 const t0 = Date.now();
 setInterval(() => {
-  const v = ((Date.now() - t0) / 1000) * PER_SEC;
-  document.getElementById('ticker').textContent = '$' + v.toFixed(2);
+  const v = ((Date.now() - t0) / 1000) * tickerPerSec;
+  document.getElementById('ticker').textContent = tickerCity.cur + v.toFixed(2);
 }, 100);
 
 // ── CHART DEFAULTS ────────────────────────────────────────
