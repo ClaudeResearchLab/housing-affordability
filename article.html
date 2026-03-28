@@ -1035,7 +1035,7 @@ function updateCalc() {
     const aptEnd = Math.round(apt * Math.pow(1 + gRate, totalJ));
     const endYear = CUR_YEAR + totalJ;
     let histLine = '';
-    if (c.apt2000) {
+    if (c.apt2000 && !outskirtOn) {
       histLine = `<span style="color:var(--text3);font-size:12px">Может показаться нереальным, но +${c.growth}%/год это исторический темп: в 2000 году та же ${propType.toLowerCase()} стоила ~${fmt(c.apt2000)}, сейчас ${fmt(apt)}. При сохранении темпа она будет стоить <strong style="color:var(--text2)">${fmt(aptEnd)}</strong> к ${endYear} году.</span>`;
     } else {
       histLine = `<span style="color:var(--text3);font-size:12px">При темпе +${c.growth}%/год ${propType.toLowerCase()} за ${fmt(apt)} сегодня будет стоить <strong style="color:var(--text2)">${fmt(aptEnd)}</strong> к ${endYear} году.</span>`;
@@ -1134,7 +1134,8 @@ function updateCalc() {
   }
 
   // Footnote
-  const fnBase = `* ${propType} ${area}м², центр города. Первый взнос 20%.<br>Данные: <a href="https://www.numbeo.com/property-investment/" target="_blank" rel="noopener" style="color:var(--text3)">Numbeo Q1 2026</a>. Цены, зарплаты, аренда, март 2026.`;
+  const locLabel = outskirtOn ? 'не центр, вторичка (−35%)' : 'центр города';
+  const fnBase = `* ${propType} ${area}м², ${locLabel}. Первый взнос 20%.<br>Данные: <a href="https://www.numbeo.com/property-investment/" target="_blank" rel="noopener" style="color:var(--text3)">Numbeo Q1 2026</a>. Цены, зарплаты, аренда, март 2026.`;
   const fnExtra = c.house ? `<br>Цены на дома: <a href="https://www.zillow.com/home-values/12447/los-angeles-ca/" target="_blank" rel="noopener" style="color:var(--text3)">Zillow 2026</a>, медианный дом ~$925k.` : '';
   document.getElementById('calcFootnote').innerHTML = fnBase + fnExtra;
 }
@@ -1191,6 +1192,7 @@ document.getElementById('citySelect').addEventListener('change', () => {
   const c = CITIES[document.getElementById('citySelect').value];
   document.getElementById('salaryInput').value = c.salary;
   document.getElementById('areaInput').value = c.defArea || 60;
+  document.getElementById('savedInput').value = 0;
   document.getElementById('rateInput').value = c.rate;
   document.getElementById('rateInput').dataset.touched = '';
   syncAdvInputs();
