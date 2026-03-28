@@ -286,7 +286,7 @@ strong{font-weight:600}
       <span class="lbl">Калькулятор доступности жилья</span>
       <label class="hdr-toggle" style="margin-left:auto">
         <input type="checkbox" id="growthToggle">
-        <span style="text-decoration:underline">Учитывать рост цен</span>
+        <span style="text-decoration:underline;font-weight:600">Учитывать рост цен</span>
         <span class="tip">
           <span class="tip-icon">?</span>
           <span class="tip-box">Каждый год цена квартиры растёт на указанный % роста цен. Цель накопления пересчитывается ежегодно — как в реальной жизни. Без галочки цена зафиксирована.</span>
@@ -691,7 +691,7 @@ const CITIES = {
   chicago:   {name:'Чикаго',   cur:'$', priceM2:3804,  salary:4835, expenses:3000, rate:6.5,  growth:5,  pi00:2.5,  pi25:3.9,  closing:6.4,  rent1br:2449, apt2000:null,   rateNote:'США, 30-year fixed'},
   austin:    {name:'Остин',     cur:'$', priceM2:7115,  salary:4962, expenses:3200, rate:6.5,  growth:3,  pi00:4.0,  pi25:7.2,  closing:6.4,  rent1br:2100, apt2000:null,   rateNote:'США, 30-year fixed'},
   losangeles:{name:'Лос-Анджелес',cur:'$', priceM2:6167, salary:4137, expenses:3500, rate:6.5,  growth:6,  pi00:6.0,  pi25:10.2, closing:6.4,  rent1br:2689, apt2000:null,   rateNote:'США, 30-year fixed. Медианный дом ~$925k, Zillow 2026', house:true, defArea:150},
-  moscow:    {name:'Москва',    cur:'$', priceM2:9309,  salary:1462, expenses:973,  rate:28.0, growth:6,  pi00:21.7, pi25:31.8, closing:9.6,  rent1br:1246, apt2000:39000,  rateNote:'Рыночная 28% (ключевая ЦБ 21% + маржа). Семейная: 6%'},
+  moscow:    {name:'Москва',    cur:'$', priceM2:9309,  salary:1462, expenses:973,  rate:28.0, growth:6,  pi00:21.7, pi25:31.8, closing:9.6,  rent1br:1246, apt2000:39000,  rateNote:'28% рыночная — ключевая ЦБ 21% + маржа. Семейная: 6%'},
   dubai:     {name:'Дубай',     cur:'$', priceM2:7244,  salary:3850, expenses:2500, rate:4.5,  growth:12, pi00:5.0,  pi25:9.4,  closing:7.0,  rent1br:2271, apt2000:null,   rateNote:'ОАЭ, плавающая/фикс., CBUAE'},
   singapore: {name:'Сингапур',  cur:'$', priceM2:22282, salary:3965, expenses:3200, rate:3.5,  growth:4,  pi00:15.0, pi25:28.1, closing:5.0,  rent1br:2594, apt2000:null,   rateNote:'Сингапур, MAS'},
   tbilisi:   {name:'Тбилиси',   cur:'$', priceM2:2365,  salary:623,  expenses:650,  rate:11.0, growth:8,  pi00:7.0,  pi25:19.0, closing:5.0,  rent1br:705,  apt2000:null,   rateNote:'Грузия, рыночная, NBG'},
