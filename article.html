@@ -172,12 +172,15 @@ strong{font-weight:600}
 /* RESULTS GRID */
 .calc-results{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1px;background:var(--border);margin-bottom:0}
 .calc-results-wrap{border-top:1px solid var(--border);padding-top:24px}
-.cr-item{background:var(--surface2);padding:16px 18px;display:flex;flex-direction:column;justify-content:space-between}
+.cr-item{background:var(--surface2);padding:16px 18px;display:flex;flex-direction:column;justify-content:space-between;position:relative}
 .cr-item .cr-lbl{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
 .cr-item .cr-val{font-size:22px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.02em;margin-top:auto}
 .cr-item .cr-val.danger{color:var(--red)}
 .cr-item .cr-val.warning{color:var(--orange)}
 .cr-item .cr-val.ok{color:var(--green)}
+.rate-tip{display:flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;background:var(--border);color:var(--text3);font-size:10px;font-weight:600;cursor:help;position:absolute;top:10px;right:10px}
+.rate-tip:hover::after{content:attr(title);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:var(--bg);border:1px solid var(--border);color:var(--text2);font-size:12px;font-weight:400;padding:8px 12px;border-radius:6px;white-space:normal;width:260px;z-index:200;box-shadow:0 8px 24px rgba(0,0,0,.5);line-height:1.4}
+.rate-tip:hover::before{content:'';position:absolute;bottom:calc(100% + 2px);left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--border);z-index:201}
 .calc-growth{padding:16px 18px;background:#100000;border:1px solid #3a1010;display:none;margin-top:14px}
 .calc-growth.on{display:block}
 .calc-growth .verdict{font-size:18px;font-weight:700;color:var(--red);margin-bottom:6px}
@@ -276,7 +279,7 @@ strong{font-weight:600}
 <div class="container">
   <div class="sec-label">Начни с себя</div>
   <h2>Посчитай свой город</h2>
-  <p>Прежде чем продолжать - посмотри сам. Введи данные. Потом включи галочку.</p>
+  <p>Прежде чем продолжить - посмотри сам. Введи данные. Потом включи галочку.</p>
 
   <div class="calc-wrap">
     <div class="calc-hdr">
@@ -432,18 +435,23 @@ strong{font-weight:600}
 <div class="container">
   <div class="sec-label">Обещание</div>
   <h2>Тебе говорили: работай - будет квартира</h2>
-  <p>Не метафорически. Буквально: устройся на нормальную работу, откладывай что можешь - и через несколько лет своя квартира. Так говорили родители, учителя, финансовые советники. Так говорят до сих пор.</p>
-  <p>Давай возьмём идеального человека. Мадрид, 2025 год. Медианная зарплата нетто: €1&nbsp;771/мес. Он не пьёт, не курит, не меняет телефон каждый год. Расходы на жизнь - строго по норме: аренда, еда, транспорт, коммуналка. Итого: ~€1&nbsp;759/мес. Остаток:</p>
+  <p>Не метафорически. Буквально: устройся на нормальную работу, откладывай что можешь - и через несколько лет своя квартира. Так говорили родители, учителя, финансовые советники. Кто-то так говорит до сих пор.</p>
+  <p>Давай возьмём идеального человека. Мадрид, 2026 год. Медианная зарплата нетто: €1&nbsp;771/мес. Он не пьёт, не курит, не меняет телефон каждый год. Расходы на жизнь - строго по норме: аренда, еда, транспорт, коммуналка. Итого: ~€1&nbsp;760/мес.</p>
+  <p>Остаток:</p>
 
   <div class="callout">
-    <span class="callout-num">€12</span>
+    <span class="callout-num">€11</span>
     <div class="callout-text">Остаток медианного работника Мадрида после базовых расходов на жизнь в месяц. Это не на кафе - это весь остаток.</div>
   </div>
 
-  <p>Квартира 60м² в центре: €481&nbsp;000<span style="font-size:11px;color:var(--text3);vertical-align:super"> €8&nbsp;022/м², Numbeo март 2026</span>. Первый взнос 20%: €96&nbsp;000. Если откладывать 20% зарплаты (~€354/мес) - это 23 года накоплений. За это время квартира подорожает ещё на 150–250% (исторический темп роста Мадрида: 3.5–5.5%/год). Финиш убегает.</p>
-  <p>Тот же Мадрид, 1998 год. P/I ≈ 9<span style="font-size:11px;color:var(--text3);vertical-align:super"> price-to-income: сколько годовых зарплат стоит квартира</span>. Квартира ~€90&nbsp;000. Первый взнос тогда был стандартно 10% — €9&nbsp;000. При той же дисциплине - ~5 лет. Купил. Та же работа. Та же дисциплина. Другая эпоха.</p>
+  <p>Квартира 60м² в центре: €481&nbsp;000<span style="font-size:11px;color:var(--text3);vertical-align:super">*</span>. Первый взнос 20%: €96&nbsp;000. Если каким-то образом средний человек будет откладывать 20% зарплаты (~€354/мес), экономя как может - это всё равно 23 года накоплений. За это время квартира подорожает ещё на 150–250% (исторический темп роста Мадрида: 3.5–5.5%/год). Финиш убегает.</p>
+  <p style="font-size:12px;color:var(--text3);margin-top:-8px">* €8 022/м², Numbeo март 2026</p>
+  <p>Тот же Мадрид, 1998 год. P/I ≈ 9<span style="font-size:11px;color:var(--text3);vertical-align:super">**</span>. Квартира ~€90&nbsp;000. Первый взнос тогда был стандартно 10% — €9&nbsp;000. При том же подходе: ~5 лет и купил. Та же работа. Та же дисциплина. Другая эпоха.</p>
+  <p style="font-size:12px;color:var(--text3);margin-top:-8px">** P/I (price-to-income) — сколько годовых зарплат стоит квартира</p>
 
-  <div class="pull">Что изменилось - люди или математика?</div>
+  <p>При этом в Лиссабоне средний житель не может даже копить: расходы на жизнь превышают зарплату на 35%. Аренда однушки — $1&nbsp;512/мес при зарплате $1&nbsp;377. Математически жить одному невозможно.</p>
+
+  <div class="pull">Так что изменилось — ты теперь тратишь на авокадо-тосты, или может всё-таки что-то ещё?</div>
 </div>
 </section>
 
@@ -451,20 +459,20 @@ strong{font-weight:600}
 <section>
 <div class="container">
   <div class="sec-label">Механика</div>
-  <h2>Три силы, которые работали против тебя одновременно</h2>
+  <h2>Три вещи меняются параллельно</h2>
   <p>Это не один фактор. Три вещи изменились параллельно - и каждая усиливала остальные.</p>
 
   <div style="margin-top:36px">
     <div class="force">
       <div class="force-num">01</div>
       <div>
-        <h3>Цены росли в 2–10 раз быстрее зарплат</h3>
+        <h3>Цены растут в 2–10 раз быстрее зарплат</h3>
         <p>Берлин: цена м² выросла с ~€1&nbsp;000 до €7&nbsp;374 за 25 лет (+637%). Зарплаты за то же время: +112%. Варшава: цены +1&nbsp;279%, зарплаты +439%. Разрыв между ростом цен и ростом зарплат — в 5–6 раз.</p>
         <p>Данные OECD: Германия, реальный CAGR зарплат 2000–2010: <strong>+0.30%/год</strong>. США 2020–2024: <strong>+0.05%/год</strong>. Португалия 2010–2020: <strong>−0.03%/год</strong>. Пока цены летели вверх.</p>
         <div class="stat-row">
           <div class="stat-box"><span class="n red">+637%</span><span class="l">Рост цен м², Берлин 2000–2026</span></div>
           <div class="stat-box"><span class="n orange">+112%</span><span class="l">Рост зарплат, Германия 2000–2026</span></div>
-          <div class="stat-box"><span class="n red">×6</span><span class="l">Цены росли быстрее зарплат во столько раз</span></div>
+          <div class="stat-box"><span class="n red">×6</span><span class="l">Цены росли в 6 раз быстрее зарплат</span></div>
         </div>
       </div>
     </div>
@@ -494,7 +502,7 @@ strong{font-weight:600}
 <section>
 <div class="container">
   <div class="sec-label">Кейс: ускорение</div>
-  <h2>Валенсия: что происходит когда рынок переключает передачу</h2>
+  <h2>Валенсия: когда спокойный город перестаёт быть спокойным</h2>
   <p>Валенсия - не самый дорогой город. Показателен именно потому что демонстрирует нелинейность. 20 лет она была "недооценённой" - дешевле Мадрида и Барселоны. Потом что-то щёлкнуло: цифровые кочевники, солнце, дефицит долгосрочной аренды.</p>
   <div class="stat-row">
     <div class="stat-box"><span class="n">€1&nbsp;140</span><span class="l">Цена м² центр, Валенсия, 2015</span></div>
@@ -509,7 +517,7 @@ strong{font-weight:600}
   </div>
 </div>
 <div class="container">
-  <p>P/I Валенсии: 4.0 в 2015 году → 13.4 в 2026-м. Рост в 3.4 раза за десятилетие. Зарплаты за то же время: +44%.</p>
+  <p>P/I Валенсии: 4.0 в 2015 году → 13.4 в 2026-м. +235% за десятилетие. Зарплаты за то же время: +44%.</p>
   <p style="color:var(--text2)">Это паттерн, не исключение. Дубай: +20%/год. Малага: +20%/год. Варшава: ~10%/год. Будапешт: +13%/год. Амстердам: +10.8%/год. Везде одна и та же механика.</p>
 </div>
 </section>
@@ -531,18 +539,24 @@ strong{font-weight:600}
   <table class="data-table">
     <thead><tr><th>Город</th><th>P/I 2000</th><th>P/I 2025</th><th>Изменение</th><th>Что это значит</th></tr></thead>
     <tbody>
-      <tr><td>Берлин</td><td class="good">3.2</td><td class="bad">12.3</td><td class="bad">×3.8</td><td>В 4 раза тяжелее</td></tr>
-      <tr><td>Мадрид</td><td class="ok">10.0</td><td class="bad">18.1</td><td class="bad">×1.8</td><td>В 2 раза тяжелее</td></tr>
-      <tr><td>Лондон</td><td class="bad">11.7</td><td class="bad">20.4</td><td class="bad">×1.7</td><td>Поколение арендаторов</td></tr>
-      <tr><td>Лиссабон</td><td class="ok">8.0</td><td class="bad">23.9</td><td class="bad">×3.0</td><td>Расходы превышают доходы</td></tr>
-      <tr><td>Варшава</td><td class="good">5.7</td><td class="bad">14.1</td><td class="bad">×2.5</td><td>В 2.5 раза тяжелее</td></tr>
-      <tr><td>Нью-Йорк</td><td class="ok">8.0</td><td class="bad">19.2</td><td class="bad">×2.4</td><td>Аренда 85% дохода</td></tr>
-      <tr><td>Чикаго</td><td class="good">2.5</td><td class="good">3.9</td><td class="ok">×1.6</td><td>Исключение. Пока.</td></tr>
+      <tr><td>Берлин</td><td class="good">3.2</td><td class="bad">12.3</td><td class="bad">+284%</td><td>В 4 раза тяжелее</td></tr>
+      <tr><td>Мадрид</td><td class="ok">10.0</td><td class="bad">18.1</td><td class="bad">+81%</td><td>В 2 раза тяжелее</td></tr>
+      <tr><td>Лондон</td><td class="bad">11.7</td><td class="bad">20.4</td><td class="bad">+74%</td><td>Поколение арендаторов</td></tr>
+      <tr><td>Лиссабон</td><td class="ok">8.0</td><td class="bad">23.9</td><td class="bad">+199%</td><td>Расходы превышают доходы</td></tr>
+      <tr><td>Варшава</td><td class="good">5.7</td><td class="bad">14.1</td><td class="bad">+147%</td><td>В 2.5 раза тяжелее</td></tr>
+      <tr><td>Нью-Йорк</td><td class="ok">8.0</td><td class="bad">19.2</td><td class="bad">+140%</td><td>Аренда 85% дохода</td></tr>
+      <tr><td>Чикаго</td><td class="good">2.5</td><td class="good">3.9</td><td class="ok">+56%</td><td>Исключение. Пока.</td></tr>
       <tr><td>Италия / Рим</td><td class="bad">10.8</td><td class="ok">9.6</td><td class="good">−11%</td><td>Единственная страна где стало легче</td></tr>
     </tbody>
   </table>
   <div class="pull">В 2000 году средний берлинец копил 3 года - и покупал. В 2026 - 12+ лет. Та же Германия. Другая математика.</div>
-  <p>Доля владельцев жилья среди 25–34 летних в Великобритании: 59% в 2003 году → 35% в 2017-м. В Испании молодёжь до 29 лет, живущая самостоятельно: 52% владельцев в 2007 → 29% в 2016-м. Средний возраст первой покупки в Великобритании вырос с ~29 лет (начало 2000-х) до ~34 лет (2020-е). В Испании - с ~34 до ~41 года.</p>
+  <p>Это видно не только в ценах, но и в том, кто вообще покупает:</p>
+  <ul style="color:var(--text2);line-height:1.8;margin:12px 0">
+    <li>Великобритания: доля владельцев среди 25–34 летних упала с 59% (2003) до 35% (2017)</li>
+    <li>Испания: среди молодёжи до 29 лет — с 52% (2007) до 29% (2016)</li>
+    <li>Средний возраст первой покупки в UK вырос с ~29 до ~34 лет</li>
+    <li>В Испании — с ~34 до ~41 года</li>
+  </ul>
   <p>Это не провал поколения. Это сдвиг рынка.</p>
 </div>
 </section>
@@ -562,12 +576,12 @@ strong{font-weight:600}
 </div>
 <div class="container">
   <div class="stat-row">
-    <div class="stat-box"><span class="n orange" style="font-size:22px;font-weight:800">Умеренный</span><span class="l">+4%/год. Мадрид P/I≈27. Только пары с двумя доходами.</span></div>
-    <div class="stat-box"><span class="n red" style="font-size:22px;font-weight:800">Базовый</span><span class="l">+6%/год. Мадрид P/I≈39. Недоступно для 80%+ одиночек.</span></div>
-    <div class="stat-box"><span class="n" style="font-size:22px;font-weight:800;color:#c0392b">Агрессивный</span><span class="l">+9%/год. Мадрид P/I≈68. Функционально невозможно.</span></div>
+    <div class="stat-box"><span class="n orange" style="font-size:22px;font-weight:800">Умеренный</span><span class="l">+4%/год. Мадрид P/I≈27.<br>Один человек копит на взнос 27 лет.</span></div>
+    <div class="stat-box"><span class="n red" style="font-size:22px;font-weight:800">Базовый</span><span class="l">+6%/год. Мадрид P/I≈39.<br>Вся зарплата за 39 лет = одна квартира.</span></div>
+    <div class="stat-box"><span class="n" style="font-size:22px;font-weight:800;color:#c0392b">Агрессивный</span><span class="l">+9%/год. Мадрид P/I≈68.<br>68 годовых зарплат за квартиру. Покупка невозможна.</span></div>
   </div>
-  <p>Валенсия отдельно: при темпе +8%/год (консервативнее чем последние 3 года) - квартира €291k сегодня через 20 лет стоит €1.36M. Зарплата при +2%/год: €2&nbsp;700/мес. P/I: около 42.</p>
-  <p>Урбанизация продолжается, строить не успевают. Дефицит структурный, не цикличный. Демография в Японии создала откат - в Европе пока нет сигналов к тому же.</p>
+  <p>Валенсия отдельно: при темпе +8%/год (за последние 3 года рост был +13–24%/год) - квартира за €291k сегодня будет стоить €1.36M в 2046 году. Средняя зарплата при росте +2%/год вырастет до €2&nbsp;700/мес. Итого: 42 годовых зарплаты за ту же квартиру.</p>
+  <p>Люди продолжают переезжать в города, а строительство не успевает за спросом — в одной только Испании дефицит за 2021–2024 оценивается в 500–750 тысяч квартир. Это не временный перекос, а структурная нехватка. Единственный пример, где демография развернула рынок — Япония 1990-х, когда население начало сокращаться. В Европе таких сигналов пока нет.</p>
   <p>Есть исключения: часть городов Восточной Германии, Средний Запад США, регионы с оттоком населения. Там математика другая. Но это не та жизнь которую большинство планирует.</p>
 </div>
 </section>
@@ -577,7 +591,8 @@ strong{font-weight:600}
 <div class="container">
   <div class="sec-label">Структурная слепота</div>
   <h2>Почему об этом не говорят</h2>
-  <p>Средний возраст члена правительства в европейской стране - 52–58 лет. Они купили жильё в 1990–2005 году. При P/I 3–8. По ставке 6–8% - но когда квартира стоила 3 годовых зарплаты, даже высокая ставка не была катастрофой.</p>
+  <p>Средний возраст члена правительства в европейской стране — 52–58 лет<span style="font-size:11px;color:var(--text3);vertical-align:super">*</span>. Они купили жильё в 1990–2005 году. При P/I 3–8. По ставке 6–8% — но когда квартира стоила 3 годовых зарплаты, даже высокая ставка не была катастрофой.</p>
+  <p style="font-size:12px;color:var(--text3);margin-top:-8px">* IPU/World Bank, Average age of parliamentarians, 2020–2024</p>
   <p>Родители советуют: работай, копи, не трать на глупости. Для их времени это был нормальный совет. Для времени, когда P/I в Берлине был 3.2, а не 12.3. Они не лгут. Они просто не понимают что сломалось - потому что им не нужно это понимать.</p>
   <p>Журналисты пишут о "росте рынка недвижимости" как о позитивной новости. Для тех, у кого уже есть квартира, так и есть. Медианный возраст аудитории большинства изданий - выше 40. Владельцы. Круг замкнулся.</p>
 
@@ -596,9 +611,9 @@ strong{font-weight:600}
   <div class="finale-lines">
     <span><span class="dash">-</span>Твои родители работали и <span class="bold">купили.</span></span>
     <span><span class="dash">-</span>Ты работаешь - и <span class="bold">снимаешь.</span></span>
-    <span><span class="dash">-</span>Их дети будут работать - и...</span>
+    <span><span class="dash">-</span>Твои дети будут работать - и...</span>
   </div>
-  <p class="finale-ellipsis">Математика дальше сама.</p>
+  <p class="finale-ellipsis">Если P/I удваивается каждые 20 лет — посчитай сам, что будет через 40.</p>
 </div>
 </section>
 
@@ -654,27 +669,27 @@ strong{font-weight:600}
 <script>
 // ── CITY DATA ──────────────────────────────────────────────
 const CITIES = {
-  madrid:    {name:'Мадрид',    priceM2:8022,  salary:2213, expenses:1770, rate:3.0,  growth:5,  pi00:10.0, pi25:18.1, closing:14.1, rent1br:1296, rateNote:'Испания, фикс. 25 лет, ECB MFI 2025. Зарплата: Numbeo средняя'},
-  barcelona: {name:'Барселона', priceM2:6057,  salary:2080, expenses:1900, rate:3.0,  growth:5,  pi00:9.0,  pi25:14.6, closing:14.1, rent1br:1758, rateNote:'Испания, фикс. 25 лет'},
-  valencia:  {name:'Валенсия',  priceM2:4853,  salary:1817, expenses:1600, rate:3.0,  growth:10, pi00:5.0,  pi25:13.4, closing:14.1, rent1br:918,  rateNote:'Испания, фикс. 25 лет'},
-  lisbon:    {name:'Лиссабон',  priceM2:6579,  salary:1377, expenses:1855, rate:3.3,  growth:6,  pi00:8.0,  pi25:23.9, closing:13.5, rent1br:1512, rateNote:'Португалия, фикс., Banco de Portugal'},
-  berlin:    {name:'Берлин',    priceM2:7374,  salary:3004, expenses:1834, rate:3.55, growth:4,  pi00:3.2,  pi25:12.3, closing:16.5, rent1br:1393, rateNote:'Германия, фикс. 25 лет, Bundesbank'},
-  munich:    {name:'Мюнхен',    priceM2:10951, salary:4054, expenses:2200, rate:3.55, growth:4,  pi00:4.5,  pi25:13.5, closing:16.5, rent1br:1531, rateNote:'Германия, фикс. 25 лет'},
-  london:    {name:'Лондон',    priceM2:17913, salary:4400, expenses:3000, rate:4.5,  growth:4,  pi00:11.7, pi25:20.4, closing:9.6,  rent1br:2891, rateNote:'UK, фикс. 2 года, Nationwide. £3,698×1.19'},
-  amsterdam: {name:'Амстердам', priceM2:9333,  salary:4365, expenses:2444, rate:3.6,  growth:8,  pi00:6.0,  pi25:10.7, closing:7.0,  rent1br:2819, rateNote:'Нидерланды, фикс. 20 лет, DNB'},
-  warsaw:    {name:'Варшава',   priceM2:5515,  salary:1957, expenses:1448, rate:7.0,  growth:8,  pi00:5.7,  pi25:14.1, closing:12.5, rent1br:1101, rateNote:'Польша, фикс. 25 лет, NBP. 8180zł÷4.18'},
-  prague:    {name:'Прага',     priceM2:8590,  salary:1956, expenses:1562, rate:5.2,  growth:8,  pi00:4.5,  pi25:22.0, closing:10.0, rent1br:1232, rateNote:'Чехия, фикс. 5 лет, CNB. 48912Kč÷25'},
-  budapest:  {name:'Будапешт',  priceM2:4636,  salary:1362, expenses:1128, rate:7.3,  growth:9,  pi00:5.0,  pi25:17.0, closing:8.0,  rent1br:702,  rateNote:'Венгрия, рыночная, MNB'},
-  belgrade:  {name:'Белград',   priceM2:4390,  salary:1054, expenses:1058, rate:5.5,  growth:8,  pi00:6.0,  pi25:20.8, closing:8.0,  rent1br:744,  rateNote:'Сербия, рыночная'},
-  newyork:   {name:'Нью-Йорк', priceM2:20305, salary:5279, expenses:4500, rate:6.5,  growth:6,  pi00:8.0,  pi25:19.2, closing:6.4,  rent1br:4469, rateNote:'США, 30-year fixed, Freddie Mac'},
-  chicago:   {name:'Чикаго',   priceM2:3804,  salary:4835, expenses:3000, rate:6.5,  growth:5,  pi00:2.5,  pi25:3.9,  closing:6.4,  rent1br:2449, rateNote:'США, 30-year fixed'},
-  austin:    {name:'Остин',     priceM2:7115,  salary:4962, expenses:3200, rate:6.5,  growth:3,  pi00:4.0,  pi25:7.2,  closing:6.4,  rent1br:2100, rateNote:'США, 30-year fixed'},
-  losangeles:{name:'Лос-Анджелес',priceM2:8409, salary:4137, expenses:3500, rate:6.5,  growth:5,  pi00:6.0,  pi25:10.2, closing:6.4,  rent1br:2689, rateNote:'США, 30-year fixed, Numbeo март 2026'},
-  moscow:    {name:'Москва',    priceM2:9309,  salary:1462, expenses:973,  rate:28.0, growth:6,  pi00:21.7, pi25:31.8, closing:9.6,  rent1br:1246, rateNote:'Рыночная 28% (ключ. ЦБ 21% + маржа). Семейная: 6%. 64656₽÷97×1.5(Мск)'},
-  dubai:     {name:'Дубай',     priceM2:7244,  salary:3850, expenses:2500, rate:4.5,  growth:12, pi00:5.0,  pi25:9.4,  closing:7.0,  rent1br:2271, rateNote:'ОАЭ, плавающая/фикс., CBUAE'},
-  singapore: {name:'Сингапур',  priceM2:22282, salary:3965, expenses:3200, rate:3.5,  growth:4,  pi00:15.0, pi25:28.1, closing:5.0,  rent1br:2594, rateNote:'Сингапур, MAS'},
-  tbilisi:   {name:'Тбилиси',   priceM2:2365,  salary:623,  expenses:650,  rate:11.0, growth:8,  pi00:7.0,  pi25:19.0, closing:5.0,  rent1br:705,  rateNote:'Грузия, рыночная, NBG'},
-  almaty:    {name:'Алматы',    priceM2:2026,  salary:768,  expenses:700,  rate:19.5, growth:6,  pi00:5.0,  pi25:13.2, closing:5.0,  rent1br:713,  rateNote:'Казахстан, рыночная, НБРК'}
+  madrid:    {name:'Мадрид',    priceM2:8022,  salary:2213, expenses:1770, rate:3.0,  growth:5,  pi00:10.0, pi25:18.1, closing:14.1, rent1br:1296, apt2000:108000, rateNote:'Испания, фикс. 25 лет, ECB MFI 2025. Зарплата: Numbeo средняя'},
+  barcelona: {name:'Барселона', priceM2:6057,  salary:2080, expenses:1900, rate:3.0,  growth:5,  pi00:9.0,  pi25:14.6, closing:14.1, rent1br:1758, apt2000:108000, rateNote:'Испания, фикс. 25 лет'},
+  valencia:  {name:'Валенсия',  priceM2:4853,  salary:1817, expenses:1600, rate:3.0,  growth:8, pi00:5.0,  pi25:13.4, closing:14.1, rent1br:918,  apt2000:68400,  rateNote:'Испания, фикс. 25 лет'},
+  lisbon:    {name:'Лиссабон',  priceM2:6579,  salary:1377, expenses:1855, rate:3.3,  growth:6,  pi00:8.0,  pi25:23.9, closing:13.5, rent1br:1512, apt2000:null,   rateNote:'Португалия, фикс., Banco de Portugal'},
+  berlin:    {name:'Берлин',    priceM2:7374,  salary:3004, expenses:1834, rate:3.55, growth:4,  pi00:3.2,  pi25:12.3, closing:16.5, rent1br:1393, apt2000:66000,  rateNote:'Германия, фикс. 25 лет, Bundesbank'},
+  munich:    {name:'Мюнхен',    priceM2:10951, salary:4054, expenses:2200, rate:3.55, growth:4,  pi00:4.5,  pi25:13.5, closing:16.5, rent1br:1531, apt2000:120000, rateNote:'Германия, фикс. 25 лет'},
+  london:    {name:'Лондон',    priceM2:17913, salary:4400, expenses:3000, rate:4.5,  growth:4,  pi00:11.7, pi25:20.4, closing:9.6,  rent1br:2891, apt2000:252000, rateNote:'UK, фикс. 2 года, Nationwide. £3,698×1.19'},
+  amsterdam: {name:'Амстердам', priceM2:9333,  salary:4365, expenses:2444, rate:3.6,  growth:8,  pi00:6.0,  pi25:10.7, closing:7.0,  rent1br:2819, apt2000:null,   rateNote:'Нидерланды, фикс. 20 лет, DNB'},
+  warsaw:    {name:'Варшава',   priceM2:5515,  salary:1957, expenses:1448, rate:7.0,  growth:8,  pi00:5.7,  pi25:14.1, closing:12.5, rent1br:1101, apt2000:24000,  rateNote:'Польша, фикс. 25 лет, NBP. 8180zł÷4.18'},
+  prague:    {name:'Прага',     priceM2:8590,  salary:1956, expenses:1562, rate:5.2,  growth:8,  pi00:4.5,  pi25:22.0, closing:10.0, rent1br:1232, apt2000:null,   rateNote:'Чехия, фикс. 5 лет, CNB. 48912Kč÷25'},
+  budapest:  {name:'Будапешт',  priceM2:4636,  salary:1362, expenses:1128, rate:7.3,  growth:9,  pi00:5.0,  pi25:17.0, closing:8.0,  rent1br:702,  apt2000:null,   rateNote:'Венгрия, рыночная, MNB'},
+  belgrade:  {name:'Белград',   priceM2:4390,  salary:1054, expenses:1058, rate:5.5,  growth:8,  pi00:6.0,  pi25:20.8, closing:8.0,  rent1br:744,  apt2000:null,   rateNote:'Сербия, рыночная'},
+  newyork:   {name:'Нью-Йорк', priceM2:20305, salary:5279, expenses:4500, rate:6.5,  growth:6,  pi00:8.0,  pi25:19.2, closing:6.4,  rent1br:4469, apt2000:180000, rateNote:'США, 30-year fixed, Freddie Mac'},
+  chicago:   {name:'Чикаго',   priceM2:3804,  salary:4835, expenses:3000, rate:6.5,  growth:5,  pi00:2.5,  pi25:3.9,  closing:6.4,  rent1br:2449, apt2000:null,   rateNote:'США, 30-year fixed'},
+  austin:    {name:'Остин',     priceM2:7115,  salary:4962, expenses:3200, rate:6.5,  growth:3,  pi00:4.0,  pi25:7.2,  closing:6.4,  rent1br:2100, apt2000:null,   rateNote:'США, 30-year fixed'},
+  losangeles:{name:'Лос-Анджелес',priceM2:8409, salary:4137, expenses:3500, rate:6.5,  growth:5,  pi00:6.0,  pi25:10.2, closing:6.4,  rent1br:2689, apt2000:null,   rateNote:'США, 30-year fixed, Numbeo март 2026'},
+  moscow:    {name:'Москва',    priceM2:9309,  salary:1462, expenses:973,  rate:28.0, growth:6,  pi00:21.7, pi25:31.8, closing:9.6,  rent1br:1246, apt2000:39000,  rateNote:'Рыночная 28% (ключевая ЦБ 21% + маржа). Семейная: 6%'},
+  dubai:     {name:'Дубай',     priceM2:7244,  salary:3850, expenses:2500, rate:4.5,  growth:12, pi00:5.0,  pi25:9.4,  closing:7.0,  rent1br:2271, apt2000:null,   rateNote:'ОАЭ, плавающая/фикс., CBUAE'},
+  singapore: {name:'Сингапур',  priceM2:22282, salary:3965, expenses:3200, rate:3.5,  growth:4,  pi00:15.0, pi25:28.1, closing:5.0,  rent1br:2594, apt2000:null,   rateNote:'Сингапур, MAS'},
+  tbilisi:   {name:'Тбилиси',   priceM2:2365,  salary:623,  expenses:650,  rate:11.0, growth:8,  pi00:7.0,  pi25:19.0, closing:5.0,  rent1br:705,  apt2000:null,   rateNote:'Грузия, рыночная, NBG'},
+  almaty:    {name:'Алматы',    priceM2:2026,  salary:768,  expenses:700,  rate:19.5, growth:6,  pi00:5.0,  pi25:13.2, closing:5.0,  rent1br:713,  apt2000:null,   rateNote:'Казахстан, рыночная, НБРК'}
 };
 
 // ── TICKER ────────────────────────────────────────────────
@@ -738,6 +753,10 @@ function journeyHTML(yearBuy, aptNow, aptAtBuy, salary, mortPay, totalPaid, grow
   const mortShare = Math.round(mortPay / salary * 100);
   const yLabel = y => y === 1 ? 'год' : y < 5 ? 'года' : 'лет';
 
+  if (mortShare > 100) {
+    return `<div class="journey-never">Взнос накопишь за ${yearBuy} ${yLabel(yearBuy)}, но ипотечный платёж — ${fmt(mortPay)}/мес (${mortShare}% дохода). Ни один банк не одобрит. Квартира к тому моменту: ${fmt(aptAtBuy)}.</div>`;
+  }
+
   return `
     <div class="journey">
       <div class="journey-bar">
@@ -757,7 +776,7 @@ function journeyHTML(yearBuy, aptNow, aptAtBuy, salary, mortPay, totalPaid, grow
         <div class="jt-box"><div class="jt-l">Платёж по ипотеке</div><div class="jt-v">${fmt(mortPay)}<span style="font-size:13px;color:var(--text2)">/мес</span></div><div style="font-size:12px;color:${mortShare>50?'var(--red)':'var(--text3)'};">${mortShare}% дохода</div></div>
         <div class="jt-box"><div class="jt-l">Квартира на момент покупки</div><div class="jt-v">${fmt(aptAtBuy)}</div></div>
         <div class="jt-box"><div class="jt-l">Итого выплатишь</div><div class="jt-v red">${fmt(totalPaid)}</div></div>
-        <div class="jt-box"><div class="jt-l">Переплата к цене сейчас</div><div class="jt-v red">×${multiplier}</div></div>
+        <div class="jt-box"><div class="jt-l">Переплата к цене сейчас</div><div class="jt-v red">${fmt(totalPaid - aptNow)}</div></div>
         <div class="jt-box"><div class="jt-l">Квартира твоя в</div><div class="jt-v red">${yearPaid}</div></div>
       </div>
     </div>`;
@@ -793,43 +812,44 @@ function buildJourneyChart(yearBuy, aptNow, aptAtBuy, annSav, mortPay, dpActual,
 
   const datasets = [
     {
-      label: 'Цена квартиры',
-      data: aptLine,
-      borderColor: growthOn ? '#e8850a' : '#444',
-      borderDash: growthOn ? [] : [4,3],
-      backgroundColor: growthOn ? 'rgba(232,133,10,0.04)' : 'transparent',
-      fill: growthOn, tension: 0.3, pointRadius: 0, borderWidth: growthOn ? 2 : 1.5,
-      order: 3
-    },
-    {
-      label: 'Взнос 20% (цель)',
-      data: dpTargetLine,
-      borderColor: '#666', borderDash: [3,3],
-      fill: false, tension: 0.3, pointRadius: 0, borderWidth: 1, order: 3
-    },
-    {
       label: 'Накоплено',
       data: savingsData,
       borderColor: '#2d7d4f', backgroundColor: 'rgba(45,125,79,0.1)',
-      fill: true, tension: 0.3, pointRadius: 0, borderWidth: 2, order: 2
+      fill: true, tension: 0.3, pointRadius: 0, borderWidth: 2, order: 3
     },
     {
       label: 'Выплачено по ипотеке',
       data: mortgageData,
       borderColor: '#e8392a', backgroundColor: 'rgba(232,57,42,0.07)',
-      fill: true, tension: 0.3, pointRadius: 0, borderWidth: 2, order: 2
+      fill: true, tension: 0.3, pointRadius: 0, borderWidth: 2, order: 3
+    },
+    ...(growthOn ? [{
+      label: 'Цена квартиры',
+      data: aptLine,
+      borderColor: '#e8850a',
+      backgroundColor: 'transparent',
+      fill: false, tension: 0.3, pointRadius: 0, borderWidth: 2.5,
+      order: 1
+    }] : []),
+    {
+      label: 'Взнос 20% (цель)',
+      data: dpTargetLine,
+      borderColor: '#666', borderDash: [3,3],
+      fill: false, tension: 0.3, pointRadius: 0, borderWidth: 1, order: 2
     }
   ];
 
-  // Marker: current price (gray dot at year 0)
-  datasets.push({
-    label: `Цена сейчас · ${fmt(aptNow)}`,
-    data: labels.map((_, i) => i === 0 ? aptNow : null),
-    borderColor: '#888', backgroundColor: '#888',
-    pointRadius: labels.map((_, i) => i === 0 ? 5 : 0),
-    pointBorderColor: '#0a0a0a', pointBorderWidth: 2,
-    pointHoverRadius: 7, showLine: false, fill: false, order: 0
-  });
+  // Marker: current price (gray dot at year 0) — only when growth is on
+  if (growthOn) {
+    datasets.push({
+      label: `Цена сейчас · ${fmt(aptNow)}`,
+      data: labels.map((_, i) => i === 0 ? aptNow : null),
+      borderColor: '#888', backgroundColor: '#888',
+      pointRadius: labels.map((_, i) => i === 0 ? 5 : 0),
+      pointBorderColor: '#0a0a0a', pointBorderWidth: 2,
+      pointHoverRadius: 7, showLine: false, fill: false, order: 0
+    });
+  }
 
   // Marker: "Купил"
   datasets.push({
@@ -928,6 +948,7 @@ function updateCalc() {
   if (hasChild) expenses += 450;
 
   const apt = c.priceM2 * 60;
+  const gRate = c.growth / 100;
   const dp = apt * 0.2;
   const closingCost = closingOn ? apt * (c.closing / 100) : 0;
   const totalUpfront = dp + closingCost;
@@ -947,7 +968,7 @@ function updateCalc() {
     {l: closingOn ? 'Взнос + сделка' : 'Первый взнос (20%)', v:fmt(totalUpfront), c:''},
     {l:'Остаток/мес', v: left > 0 ? fmt(left) : '−'+fmt(Math.abs(left)),
      c: left <= 0 ? 'danger' : left < 400 ? 'warning' : 'ok'},
-    {l:'Платёж по ипотеке', v:fmt(mortPayNow)+'/мес',
+    {l:'Платёж по ипотеке' + (rate >= 10 ? ' <span class="rate-tip" title="Официальная рыночная ставка ' + rate.toFixed(1) + '% (' + c.rateNote + '). Чтобы задать свою ставку — перейдите в «Продвинутый» режим.">?</span>' : ''), v:fmt(mortPayNow)+'/мес',
      c: mortShare > 50 ? 'danger' : mortShare > 35 ? 'warning' : 'ok'},
     {l:'Лет на взнос', v: yf === null ? '∞' : yf < 1 ? '<1' : Math.ceil(yf)+'',
      c: yf === null || yf > 20 ? 'danger' : yf > 10 ? 'warning' : 'ok'}
@@ -958,12 +979,24 @@ function updateCalc() {
   document.getElementById('calcResults').innerHTML = results
     .map(x=>`<div class="cr-item"><div class="cr-lbl">${x.l}</div><div class="cr-val ${x.c}">${x.v}</div></div>`).join('');
 
-  document.getElementById('growthLblWrap').innerHTML =
-    growthOn ? `Рост цен учтён: квартира в ${c.name} дорожает на <strong style="color:var(--red)">+${c.growth}%/год</strong> пока ты копишь.` : ``;
+  const yearBuy = growthOn ? yg : (yf !== null ? Math.ceil(yf) : null);
+
+  if (growthOn) {
+    const totalJ = yearBuy !== null ? yearBuy + MORT_YEARS : 30;
+    const aptEnd = Math.round(apt * Math.pow(1 + gRate, totalJ));
+    const endYear = CUR_YEAR + totalJ;
+    let histLine = '';
+    if (c.apt2000) {
+      histLine = `<br><span style="color:var(--text3);font-size:12px">Может показаться нереальным, но +${c.growth}%/год — это исторический темп: в 2000 году та же квартира стоила ~${fmt(c.apt2000)}, сейчас ${fmt(apt)}. При сохранении темпа — <strong style="color:var(--text2)">${fmt(aptEnd)}</strong> к ${endYear} году.</span>`;
+    }
+    document.getElementById('growthLblWrap').innerHTML =
+      `Рост цен учтён: квартира в ${c.name} дорожает на <strong style="color:var(--red)">+${c.growth}%/год</strong> пока ты копишь.`
+      + histLine;
+  } else {
+    document.getElementById('growthLblWrap').innerHTML = '';
+  }
 
   // Journey: use growth-adjusted numbers if toggle on, flat otherwise
-  const yearBuy = growthOn ? yg : (yf !== null ? Math.ceil(yf) : null);
-  const gRate = c.growth / 100;
   const aptAtBuy = growthOn && yearBuy !== null ? apt * Math.pow(1 + gRate, yearBuy) : apt;
   const closingAtBuy = closingOn ? aptAtBuy * (c.closing / 100) : 0;
   const dpAtBuy = aptAtBuy * 0.2;
