@@ -96,6 +96,9 @@ strong{font-weight:600}
 .hdr-toggle{display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none}
 .hdr-toggle input[type=checkbox]{width:15px;height:15px;accent-color:var(--red);cursor:pointer;flex-shrink:0}
 .hdr-toggle span{font-size:12px;color:var(--text2);white-space:nowrap}
+.growth-label{font-weight:600;background:linear-gradient(90deg,var(--text2) 0%,var(--text2) 40%,#e8392a 50%,var(--text2) 60%,var(--text2) 100%);background-size:200% 100%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 3s ease-in-out infinite}
+.hdr-toggle input:checked ~ .growth-label{animation:none;background:none;-webkit-text-fill-color:var(--text2)}
+@keyframes shimmer{0%,100%{background-position:200% 0}50%{background-position:-200% 0}}
 .lifestyle-toggle{display:inline-flex!important;align-items:center;gap:10px;cursor:pointer;user-select:none;padding:9px 14px;border:1px solid var(--border);background:var(--surface2);line-height:1;transition:border-color .15s,background .15s;font-size:13px;letter-spacing:normal;text-transform:none;color:var(--text2);margin-bottom:0}
 .lifestyle-toggle:hover{border-color:var(--text3);background:#1c1c1c}
 .lifestyle-toggle input[type=checkbox]{position:absolute;opacity:0;width:0;height:0;pointer-events:none}
@@ -286,7 +289,7 @@ strong{font-weight:600}
       <span class="lbl">Калькулятор доступности жилья</span>
       <label class="hdr-toggle" style="margin-left:auto">
         <input type="checkbox" id="growthToggle">
-        <span style="text-decoration:underline;font-weight:600">Учитывать рост цен</span>
+        <span class="growth-label">Учитывать рост цен</span>
         <span class="tip">
           <span class="tip-icon">?</span>
           <span class="tip-box">Каждый год цена квартиры растёт на указанный % роста цен. Цель накопления пересчитывается ежегодно — как в реальной жизни. Без галочки цена зафиксирована.</span>
