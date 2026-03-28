@@ -302,9 +302,9 @@ strong{font-weight:600}
         <div class="cf">
           <label>Город</label>
           <select id="citySelect">
+            <option value="valencia">Валенсия 🇪🇸</option>
             <option value="madrid">Мадрид 🇪🇸</option>
             <option value="barcelona">Барселона 🇪🇸</option>
-            <option value="valencia">Валенсия 🇪🇸</option>
             <option value="lisbon">Лиссабон 🇵🇹</option>
             <option value="berlin">Берлин 🇩🇪</option>
             <option value="munich">Мюнхен 🇩🇪</option>
@@ -323,11 +323,12 @@ strong{font-weight:600}
             <option value="losangeles">Лос-Анджелес 🇺🇸</option>
             <option value="tbilisi">Тбилиси 🇬🇪</option>
             <option value="almaty">Алматы 🇰🇿</option>
+            <option value="yerevan">Ереван 🇦🇲</option>
           </select>
         </div>
         <div class="cf">
-          <label>Твоя зарплата нетто ($/мес)</label>
-          <input type="number" id="salaryInput" value="1771" min="100" max="99999">
+          <label id="salaryLabel">Твоя зарплата нетто (€/мес)</label>
+          <input type="number" id="salaryInput" value="1817" min="100" max="99999">
         </div>
         <div class="cf">
           <label>Срок ипотеки</label>
@@ -379,6 +380,10 @@ strong{font-weight:600}
             </select>
           </div>
           <div class="cf">
+            <label>Площадь (м²)</label>
+            <input type="number" id="areaInput" value="60" min="10" max="500" step="5" oninput="updateCalc()">
+          </div>
+          <div class="cf">
             <label>Ипотечная ставка (%)</label>
             <input type="number" id="rateInput" step="0.1" min="0" max="50" oninput="updateCalc()">
           </div>
@@ -418,6 +423,7 @@ strong{font-weight:600}
         <div class="verdict" id="growthVerdict"></div>
         <div class="expl" id="growthExpl"></div>
       </div>
+      <div id="growthHist" style="margin-top:10px"></div>
 
       <!-- OVERPAYMENT (advanced) -->
       <div class="overpay-block" id="overpayBlock"></div>
@@ -426,7 +432,7 @@ strong{font-weight:600}
       <div class="rent-block" id="rentBlock"></div>
     </div>
   </div>
-  <p style="color:var(--text3);font-size:13px">* Квартира 60м², центр города. Первый взнос 20%. Данные: <a href="https://www.numbeo.com/property-investment/" target="_blank" rel="noopener" style="color:var(--text3)">Numbeo Q1 2026</a>. Цены, зарплаты, аренда — март 2026.</p>
+  <p style="color:var(--text3);font-size:13px">* Квартира 60м², центр города. Первый взнос 20%.<br>Данные: <a href="https://www.numbeo.com/property-investment/" target="_blank" rel="noopener" style="color:var(--text3)">Numbeo Q1 2026</a>. Цены, зарплаты, аренда, март 2026.</p>
 </div>
 </section>
 
@@ -436,7 +442,7 @@ strong{font-weight:600}
   <div class="sec-label">Обещание</div>
   <h2>Тебе говорили: работай - будет квартира</h2>
   <p>Не метафорически. Буквально: устройся на нормальную работу, откладывай что можешь - и через несколько лет своя квартира. Так говорили родители, учителя, финансовые советники. Кто-то так говорит до сих пор.</p>
-  <p>Давай возьмём идеального человека. Мадрид, 2026 год. Медианная зарплата нетто: €1&nbsp;771/мес. Он не пьёт, не курит, не меняет телефон каждый год. Расходы на жизнь - строго по норме: аренда, еда, транспорт, коммуналка. Итого: ~€1&nbsp;760/мес.</p>
+  <p>Давай возьмём идеального человека. Мадрид, 2026 год. Медианная зарплата нетто: €1&nbsp;771/мес. Он не пьёт, не курит, не меняет телефон каждый год. Расходы на жизнь строго по норме: аренда, еда, транспорт, коммуналка. Итого: ~€1&nbsp;760/мес.</p>
   <p>Остаток:</p>
 
   <div class="callout">
@@ -467,7 +473,7 @@ strong{font-weight:600}
       <div class="force-num">01</div>
       <div>
         <h3>Цены растут в 2–10 раз быстрее зарплат</h3>
-        <p>Берлин: цена м² выросла с ~€1&nbsp;000 до €7&nbsp;374 за 25 лет (+637%). Зарплаты за то же время: +112%. Варшава: цены +1&nbsp;279%, зарплаты +439%. Разрыв между ростом цен и ростом зарплат — в 5–6 раз.</p>
+        <p>Берлин: цена м² выросла с ~€1&nbsp;000 до €7&nbsp;374 за 25 лет (+637%). Зарплаты за то же время: +112%. Варшава: цены +1&nbsp;279%, зарплаты +439%. Разрыв между ростом цен и ростом зарплат в 5–6 раз.</p>
         <p>Данные OECD: Германия, реальный CAGR зарплат 2000–2010: <strong>+0.30%/год</strong>. США 2020–2024: <strong>+0.05%/год</strong>. Португалия 2010–2020: <strong>−0.03%/год</strong>. Пока цены летели вверх.</p>
         <div class="stat-row">
           <div class="stat-box"><span class="n red">+637%</span><span class="l">Рост цен м², Берлин 2000–2026</span></div>
@@ -591,7 +597,7 @@ strong{font-weight:600}
 <div class="container">
   <div class="sec-label">Структурная слепота</div>
   <h2>Почему об этом не говорят</h2>
-  <p>Средний возраст члена правительства в европейской стране — 52–58 лет<span style="font-size:11px;color:var(--text3);vertical-align:super">*</span>. Они купили жильё в 1990–2005 году. При P/I 3–8. По ставке 6–8% — но когда квартира стоила 3 годовых зарплаты, даже высокая ставка не была катастрофой.</p>
+  <p>Средний возраст члена правительства в европейской стране — 52–58 лет<span style="font-size:11px;color:var(--text3);vertical-align:super">*</span>. Они купили жильё в 1990–2005 году. При P/I 3–8. По ставке 6–8%, но когда квартира стоила 3 годовых зарплаты, даже высокая ставка не была катастрофой.</p>
   <p style="font-size:12px;color:var(--text3);margin-top:-8px">* IPU/World Bank, Average age of parliamentarians, 2020–2024</p>
   <p>Родители советуют: работай, копи, не трать на глупости. Для их времени это был нормальный совет. Для времени, когда P/I в Берлине был 3.2, а не 12.3. Они не лгут. Они просто не понимают что сломалось - потому что им не нужно это понимать.</p>
   <p>Журналисты пишут о "росте рынка недвижимости" как о позитивной новости. Для тех, у кого уже есть квартира, так и есть. Медианный возраст аудитории большинства изданий - выше 40. Владельцы. Круг замкнулся.</p>
@@ -613,7 +619,7 @@ strong{font-weight:600}
     <span><span class="dash">-</span>Ты работаешь - и <span class="bold">снимаешь.</span></span>
     <span><span class="dash">-</span>Твои дети будут работать - и...</span>
   </div>
-  <p class="finale-ellipsis">Если P/I удваивается каждые 20 лет — посчитай сам, что будет через 40.</p>
+  <p class="finale-ellipsis">Если P/I удваивается каждые 20 лет, посчитай сам что будет через 40.</p>
 </div>
 </section>
 
@@ -669,27 +675,28 @@ strong{font-weight:600}
 <script>
 // ── CITY DATA ──────────────────────────────────────────────
 const CITIES = {
-  madrid:    {name:'Мадрид',    priceM2:8022,  salary:2213, expenses:1770, rate:3.0,  growth:5,  pi00:10.0, pi25:18.1, closing:14.1, rent1br:1296, apt2000:108000, rateNote:'Испания, фикс. 25 лет, ECB MFI 2025. Зарплата: Numbeo средняя'},
-  barcelona: {name:'Барселона', priceM2:6057,  salary:2080, expenses:1900, rate:3.0,  growth:5,  pi00:9.0,  pi25:14.6, closing:14.1, rent1br:1758, apt2000:108000, rateNote:'Испания, фикс. 25 лет'},
-  valencia:  {name:'Валенсия',  priceM2:4853,  salary:1817, expenses:1600, rate:3.0,  growth:8, pi00:5.0,  pi25:13.4, closing:14.1, rent1br:918,  apt2000:68400,  rateNote:'Испания, фикс. 25 лет'},
-  lisbon:    {name:'Лиссабон',  priceM2:6579,  salary:1377, expenses:1855, rate:3.3,  growth:6,  pi00:8.0,  pi25:23.9, closing:13.5, rent1br:1512, apt2000:null,   rateNote:'Португалия, фикс., Banco de Portugal'},
-  berlin:    {name:'Берлин',    priceM2:7374,  salary:3004, expenses:1834, rate:3.55, growth:4,  pi00:3.2,  pi25:12.3, closing:16.5, rent1br:1393, apt2000:66000,  rateNote:'Германия, фикс. 25 лет, Bundesbank'},
-  munich:    {name:'Мюнхен',    priceM2:10951, salary:4054, expenses:2200, rate:3.55, growth:4,  pi00:4.5,  pi25:13.5, closing:16.5, rent1br:1531, apt2000:120000, rateNote:'Германия, фикс. 25 лет'},
-  london:    {name:'Лондон',    priceM2:17913, salary:4400, expenses:3000, rate:4.5,  growth:4,  pi00:11.7, pi25:20.4, closing:9.6,  rent1br:2891, apt2000:252000, rateNote:'UK, фикс. 2 года, Nationwide. £3,698×1.19'},
-  amsterdam: {name:'Амстердам', priceM2:9333,  salary:4365, expenses:2444, rate:3.6,  growth:8,  pi00:6.0,  pi25:10.7, closing:7.0,  rent1br:2819, apt2000:null,   rateNote:'Нидерланды, фикс. 20 лет, DNB'},
-  warsaw:    {name:'Варшава',   priceM2:5515,  salary:1957, expenses:1448, rate:7.0,  growth:8,  pi00:5.7,  pi25:14.1, closing:12.5, rent1br:1101, apt2000:24000,  rateNote:'Польша, фикс. 25 лет, NBP. 8180zł÷4.18'},
-  prague:    {name:'Прага',     priceM2:8590,  salary:1956, expenses:1562, rate:5.2,  growth:8,  pi00:4.5,  pi25:22.0, closing:10.0, rent1br:1232, apt2000:null,   rateNote:'Чехия, фикс. 5 лет, CNB. 48912Kč÷25'},
-  budapest:  {name:'Будапешт',  priceM2:4636,  salary:1362, expenses:1128, rate:7.3,  growth:9,  pi00:5.0,  pi25:17.0, closing:8.0,  rent1br:702,  apt2000:null,   rateNote:'Венгрия, рыночная, MNB'},
-  belgrade:  {name:'Белград',   priceM2:4390,  salary:1054, expenses:1058, rate:5.5,  growth:8,  pi00:6.0,  pi25:20.8, closing:8.0,  rent1br:744,  apt2000:null,   rateNote:'Сербия, рыночная'},
-  newyork:   {name:'Нью-Йорк', priceM2:20305, salary:5279, expenses:4500, rate:6.5,  growth:6,  pi00:8.0,  pi25:19.2, closing:6.4,  rent1br:4469, apt2000:180000, rateNote:'США, 30-year fixed, Freddie Mac'},
-  chicago:   {name:'Чикаго',   priceM2:3804,  salary:4835, expenses:3000, rate:6.5,  growth:5,  pi00:2.5,  pi25:3.9,  closing:6.4,  rent1br:2449, apt2000:null,   rateNote:'США, 30-year fixed'},
-  austin:    {name:'Остин',     priceM2:7115,  salary:4962, expenses:3200, rate:6.5,  growth:3,  pi00:4.0,  pi25:7.2,  closing:6.4,  rent1br:2100, apt2000:null,   rateNote:'США, 30-year fixed'},
-  losangeles:{name:'Лос-Анджелес',priceM2:8409, salary:4137, expenses:3500, rate:6.5,  growth:5,  pi00:6.0,  pi25:10.2, closing:6.4,  rent1br:2689, apt2000:null,   rateNote:'США, 30-year fixed, Numbeo март 2026'},
-  moscow:    {name:'Москва',    priceM2:9309,  salary:1462, expenses:973,  rate:28.0, growth:6,  pi00:21.7, pi25:31.8, closing:9.6,  rent1br:1246, apt2000:39000,  rateNote:'Рыночная 28% (ключевая ЦБ 21% + маржа). Семейная: 6%'},
-  dubai:     {name:'Дубай',     priceM2:7244,  salary:3850, expenses:2500, rate:4.5,  growth:12, pi00:5.0,  pi25:9.4,  closing:7.0,  rent1br:2271, apt2000:null,   rateNote:'ОАЭ, плавающая/фикс., CBUAE'},
-  singapore: {name:'Сингапур',  priceM2:22282, salary:3965, expenses:3200, rate:3.5,  growth:4,  pi00:15.0, pi25:28.1, closing:5.0,  rent1br:2594, apt2000:null,   rateNote:'Сингапур, MAS'},
-  tbilisi:   {name:'Тбилиси',   priceM2:2365,  salary:623,  expenses:650,  rate:11.0, growth:8,  pi00:7.0,  pi25:19.0, closing:5.0,  rent1br:705,  apt2000:null,   rateNote:'Грузия, рыночная, NBG'},
-  almaty:    {name:'Алматы',    priceM2:2026,  salary:768,  expenses:700,  rate:19.5, growth:6,  pi00:5.0,  pi25:13.2, closing:5.0,  rent1br:713,  apt2000:null,   rateNote:'Казахстан, рыночная, НБРК'}
+  madrid:    {name:'Мадрид',    cur:'€', priceM2:8022,  salary:2213, expenses:1770, rate:3.0,  growth:5,  pi00:10.0, pi25:18.1, closing:14.1, rent1br:1296, apt2000:108000, rateNote:'Испания, фикс. 25 лет, ECB MFI 2025. Зарплата: Numbeo средняя'},
+  barcelona: {name:'Барселона', cur:'€', priceM2:6057,  salary:2080, expenses:1900, rate:3.0,  growth:5,  pi00:9.0,  pi25:14.6, closing:14.1, rent1br:1758, apt2000:108000, rateNote:'Испания, фикс. 25 лет'},
+  valencia:  {name:'Валенсия',  cur:'€', priceM2:4853,  salary:1817, expenses:1600, rate:3.0,  growth:8, pi00:5.0,  pi25:13.4, closing:14.1, rent1br:918,  apt2000:68400,  rateNote:'Испания, фикс. 25 лет'},
+  lisbon:    {name:'Лиссабон',  cur:'€', priceM2:6579,  salary:1377, expenses:1855, rate:3.3,  growth:6,  pi00:8.0,  pi25:23.9, closing:13.5, rent1br:1512, apt2000:null,   rateNote:'Португалия, фикс., Banco de Portugal'},
+  berlin:    {name:'Берлин',    cur:'€', priceM2:7374,  salary:3004, expenses:1834, rate:3.55, growth:4,  pi00:3.2,  pi25:12.3, closing:16.5, rent1br:1393, apt2000:66000,  rateNote:'Германия, фикс. 25 лет, Bundesbank'},
+  munich:    {name:'Мюнхен',    cur:'€', priceM2:10951, salary:4054, expenses:2200, rate:3.55, growth:4,  pi00:4.5,  pi25:13.5, closing:16.5, rent1br:1531, apt2000:120000, rateNote:'Германия, фикс. 25 лет'},
+  london:    {name:'Лондон',    cur:'€', priceM2:17913, salary:4400, expenses:3000, rate:4.5,  growth:4,  pi00:11.7, pi25:20.4, closing:9.6,  rent1br:2891, apt2000:252000, rateNote:'UK, фикс. 2 года, Nationwide. £3,698×1.19'},
+  amsterdam: {name:'Амстердам', cur:'€', priceM2:9333,  salary:4365, expenses:2444, rate:3.6,  growth:8,  pi00:6.0,  pi25:10.7, closing:7.0,  rent1br:2819, apt2000:null,   rateNote:'Нидерланды, фикс. 20 лет, DNB'},
+  warsaw:    {name:'Варшава',   cur:'€', priceM2:5515,  salary:1957, expenses:1448, rate:7.0,  growth:8,  pi00:5.7,  pi25:14.1, closing:12.5, rent1br:1101, apt2000:24000,  rateNote:'Польша, фикс. 25 лет, NBP. 8180zł÷4.18'},
+  prague:    {name:'Прага',     cur:'€', priceM2:8590,  salary:1956, expenses:1562, rate:5.2,  growth:8,  pi00:4.5,  pi25:22.0, closing:10.0, rent1br:1232, apt2000:null,   rateNote:'Чехия, фикс. 5 лет, CNB. 48912Kč÷25'},
+  budapest:  {name:'Будапешт',  cur:'€', priceM2:4636,  salary:1362, expenses:1128, rate:7.3,  growth:9,  pi00:5.0,  pi25:17.0, closing:8.0,  rent1br:702,  apt2000:null,   rateNote:'Венгрия, рыночная, MNB'},
+  belgrade:  {name:'Белград',   cur:'€', priceM2:4390,  salary:1054, expenses:1058, rate:5.5,  growth:8,  pi00:6.0,  pi25:20.8, closing:8.0,  rent1br:744,  apt2000:null,   rateNote:'Сербия, рыночная'},
+  newyork:   {name:'Нью-Йорк', cur:'$', priceM2:20305, salary:5279, expenses:4500, rate:6.5,  growth:6,  pi00:8.0,  pi25:19.2, closing:6.4,  rent1br:4469, apt2000:180000, rateNote:'США, 30-year fixed, Freddie Mac'},
+  chicago:   {name:'Чикаго',   cur:'$', priceM2:3804,  salary:4835, expenses:3000, rate:6.5,  growth:5,  pi00:2.5,  pi25:3.9,  closing:6.4,  rent1br:2449, apt2000:null,   rateNote:'США, 30-year fixed'},
+  austin:    {name:'Остин',     cur:'$', priceM2:7115,  salary:4962, expenses:3200, rate:6.5,  growth:3,  pi00:4.0,  pi25:7.2,  closing:6.4,  rent1br:2100, apt2000:null,   rateNote:'США, 30-year fixed'},
+  losangeles:{name:'Лос-Анджелес',cur:'$', priceM2:8409, salary:4137, expenses:3500, rate:6.5,  growth:5,  pi00:6.0,  pi25:10.2, closing:6.4,  rent1br:2689, apt2000:null,   rateNote:'США, 30-year fixed, Numbeo март 2026'},
+  moscow:    {name:'Москва',    cur:'$', priceM2:9309,  salary:1462, expenses:973,  rate:28.0, growth:6,  pi00:21.7, pi25:31.8, closing:9.6,  rent1br:1246, apt2000:39000,  rateNote:'Рыночная 28% (ключевая ЦБ 21% + маржа). Семейная: 6%'},
+  dubai:     {name:'Дубай',     cur:'$', priceM2:7244,  salary:3850, expenses:2500, rate:4.5,  growth:12, pi00:5.0,  pi25:9.4,  closing:7.0,  rent1br:2271, apt2000:null,   rateNote:'ОАЭ, плавающая/фикс., CBUAE'},
+  singapore: {name:'Сингапур',  cur:'$', priceM2:22282, salary:3965, expenses:3200, rate:3.5,  growth:4,  pi00:15.0, pi25:28.1, closing:5.0,  rent1br:2594, apt2000:null,   rateNote:'Сингапур, MAS'},
+  tbilisi:   {name:'Тбилиси',   cur:'$', priceM2:2365,  salary:623,  expenses:650,  rate:11.0, growth:8,  pi00:7.0,  pi25:19.0, closing:5.0,  rent1br:705,  apt2000:null,   rateNote:'Грузия, рыночная, NBG'},
+  almaty:    {name:'Алматы',    cur:'$', priceM2:2026,  salary:768,  expenses:700,  rate:19.5, growth:6,  pi00:5.0,  pi25:13.2, closing:5.0,  rent1br:713,  apt2000:null,   rateNote:'Казахстан, рыночная, НБРК'},
+  yerevan:   {name:'Ереван',    cur:'$', priceM2:2914,  salary:540,  expenses:668,  rate:15.0, growth:8,  pi00:6.0,  pi25:19.8, closing:5.0,  rent1br:705,  apt2000:null,   rateNote:'Армения, рыночная 15% (ЦБ ~8%). 20 лет'}
 };
 
 // ── TICKER ────────────────────────────────────────────────
@@ -705,10 +712,11 @@ Chart.defaults.color = '#666';
 Chart.defaults.borderColor = '#222';
 
 // ── HELPERS ───────────────────────────────────────────────
+let _cur = '€';
 function fmt(n) {
-  if (n >= 1e6) return '$' + (n/1e6).toFixed(1) + 'M';
-  if (n >= 1e3) return '$' + Math.round(n/1e3) + 'k';
-  return '$' + Math.round(n);
+  if (n >= 1e6) return _cur + (n/1e6).toFixed(1) + 'M';
+  if (n >= 1e3) return _cur + Math.round(n/1e3) + 'k';
+  return _cur + Math.round(n);
 }
 
 function yearsFlat(dp, annSav) {
@@ -773,7 +781,7 @@ function journeyHTML(yearBuy, aptNow, aptAtBuy, salary, mortPay, totalPaid, grow
         <span class="jd-paid">Выплатил · ${yearPaid}</span>
       </div>
       <div class="journey-totals">
-        <div class="jt-box"><div class="jt-l">Платёж по ипотеке</div><div class="jt-v">${fmt(mortPay)}<span style="font-size:13px;color:var(--text2)">/мес</span></div><div style="font-size:12px;color:${mortShare>50?'var(--red)':'var(--text3)'};">${mortShare}% дохода</div></div>
+        <div class="jt-box"><div class="jt-l">Платёж по ипотеке</div><div style="font-size:12px;color:${mortShare>50?'var(--red)':'var(--text3)'};">${mortShare}% дохода</div><div class="jt-v">${fmt(mortPay)}<span style="font-size:13px;color:var(--text2)">/мес</span></div></div>
         <div class="jt-box"><div class="jt-l">Квартира на момент покупки</div><div class="jt-v">${fmt(aptAtBuy)}</div></div>
         <div class="jt-box"><div class="jt-l">Итого выплатишь</div><div class="jt-v red">${fmt(totalPaid)}</div></div>
         <div class="jt-box"><div class="jt-l">Переплата к цене сейчас</div><div class="jt-v red">${fmt(totalPaid - aptNow)}</div></div>
@@ -876,6 +884,7 @@ function buildJourneyChart(yearBuy, aptNow, aptAtBuy, annSav, mortPay, dpActual,
     data: { labels, datasets },
     options: {
       responsive: true, maintainAspectRatio: false,
+      animation: false,
       plugins: {
         legend: { labels: { color: '#666', font: { size: 11 }, boxWidth: 12, padding: 10,
           filter: item => !item.text.startsWith('Покупаешь') && !item.text.startsWith('Выплатил') && !item.text.startsWith('Цена сейчас') } },
@@ -928,6 +937,8 @@ document.getElementById('rateInput').addEventListener('input', function() {
 function updateCalc() {
   const key = document.getElementById('citySelect').value;
   const c = CITIES[key];
+  _cur = c.cur;
+  document.getElementById('salaryLabel').textContent = `Твоя зарплата нетто (${_cur}/мес)`;
   let sal = parseFloat(document.getElementById('salaryInput').value) || c.salary;
   const growthOn = document.getElementById('growthToggle').checked;
   const lifestyleOn = document.getElementById('lifestyleToggle').checked;
@@ -947,7 +958,8 @@ function updateCalc() {
   if (hasPartner) { income *= 1.67; expenses *= 1.35; }
   if (hasChild) expenses += 450;
 
-  const apt = c.priceM2 * 60;
+  const area = advancedMode ? (parseInt(document.getElementById('areaInput').value) || 60) : 60;
+  const apt = c.priceM2 * area;
   const gRate = c.growth / 100;
   const dp = apt * 0.2;
   const closingCost = closingOn ? apt * (c.closing / 100) : 0;
@@ -964,11 +976,11 @@ function updateCalc() {
 
   // Result boxes
   const results = [
-    {l:'Квартира 60м²', v:fmt(apt), c:''},
+    {l:`Квартира ${area}м²`, v:fmt(apt), c:''},
     {l: closingOn ? 'Взнос + сделка' : 'Первый взнос (20%)', v:fmt(totalUpfront), c:''},
     {l:'Остаток/мес', v: left > 0 ? fmt(left) : '−'+fmt(Math.abs(left)),
      c: left <= 0 ? 'danger' : left < 400 ? 'warning' : 'ok'},
-    {l:'Платёж по ипотеке' + (rate >= 10 ? ' <span class="rate-tip" title="Официальная рыночная ставка ' + rate.toFixed(1) + '% (' + c.rateNote + '). Чтобы задать свою ставку — перейдите в «Продвинутый» режим.">?</span>' : ''), v:fmt(mortPayNow)+'/мес',
+    {l:'Платёж по ипотеке' + (rate >= 10 ? ' <span class="rate-tip" title="Официальная рыночная ставка ' + rate.toFixed(1) + '% (' + c.rateNote + '). Чтобы задать свою ставку, перейдите в «Продвинутый» режим.">?</span>' : ''), v:fmt(mortPayNow)+'/мес',
      c: mortShare > 50 ? 'danger' : mortShare > 35 ? 'warning' : 'ok'},
     {l:'Лет на взнос', v: yf === null ? '∞' : yf < 1 ? '<1' : Math.ceil(yf)+'',
      c: yf === null || yf > 20 ? 'danger' : yf > 10 ? 'warning' : 'ok'}
@@ -987,13 +999,14 @@ function updateCalc() {
     const endYear = CUR_YEAR + totalJ;
     let histLine = '';
     if (c.apt2000) {
-      histLine = `<br><span style="color:var(--text3);font-size:12px">Может показаться нереальным, но +${c.growth}%/год — это исторический темп: в 2000 году та же квартира стоила ~${fmt(c.apt2000)}, сейчас ${fmt(apt)}. При сохранении темпа — <strong style="color:var(--text2)">${fmt(aptEnd)}</strong> к ${endYear} году.</span>`;
+      histLine = `<span style="color:var(--text3);font-size:12px">Может показаться нереальным, но +${c.growth}%/год это исторический темп: в 2000 году та же квартира стоила ~${fmt(c.apt2000)}, сейчас ${fmt(apt)}. При сохранении темпа она будет стоить <strong style="color:var(--text2)">${fmt(aptEnd)}</strong> к ${endYear} году.</span>`;
     }
     document.getElementById('growthLblWrap').innerHTML =
-      `Рост цен учтён: квартира в ${c.name} дорожает на <strong style="color:var(--red)">+${c.growth}%/год</strong> пока ты копишь.`
-      + histLine;
+      `Рост цен учтён: квартира в ${c.name} дорожает на <strong style="color:var(--red)">+${c.growth}%/год</strong> пока ты копишь.`;
+    document.getElementById('growthHist').innerHTML = yearBuy !== null ? histLine.replace('<br>','') : '';
   } else {
     document.getElementById('growthLblWrap').innerHTML = '';
+    document.getElementById('growthHist').innerHTML = '';
   }
 
   // Journey: use growth-adjusted numbers if toggle on, flat otherwise
@@ -1024,8 +1037,9 @@ function updateCalc() {
           ? Math.ceil(1 + Math.log(annSav / (totalUpfront * gRate)) / Math.log(1 + gRate))
           : 1;
         const growthAtCross = Math.round(totalUpfront * Math.pow(1 + gRate, yearCross - 1) * gRate);
-        document.getElementById('growthExpl').textContent =
-          `Сейчас взнос дорожает на ${fmt(annGrowth)}/год — ты копишь больше (${fmt(annSav)}/год). Но рост экспоненциальный: примерно через ${yearCross} ${yearCross===1?'год':yearCross<5?'года':'лет'} квартира будет дорожать на ${fmt(growthAtCross)}/год и обгонит твои сбережения навсегда.`;
+        document.getElementById('growthExpl').textContent = annSav > annGrowth
+          ? `Сейчас взнос дорожает на ${fmt(annGrowth)}/год — ты копишь больше (${fmt(annSav)}/год). Но рост экспоненциальный: примерно через ${yearCross} ${yearCross===1?'год':yearCross<5?'года':'лет'} квартира будет дорожать на ${fmt(growthAtCross)}/год и обгонит твои сбережения навсегда.`
+          : `Взнос дорожает на ${fmt(annGrowth)}/год — ты копишь ${fmt(annSav)}/год. Разрыв только растёт.`;
       } else {
         document.getElementById('growthExpl').textContent =
           `Базовые расходы (${fmt(expenses)}/мес) превышают доходы.`;
