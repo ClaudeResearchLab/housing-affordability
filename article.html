@@ -394,7 +394,7 @@ strong{font-weight:600}
             <label>Ипотечная ставка (%)</label>
             <input type="number" id="rateInput" step="0.1" min="0" max="50" oninput="updateCalc()">
           </div>
-          <div style="grid-column:1/-1;display:flex">
+          <div style="grid-column:1/-1;display:flex;flex-wrap:wrap;gap:10px">
             <label class="lifestyle-toggle">
               <input type="checkbox" id="closingToggle" checked onchange="updateCalc()">
               <span class="lifestyle-box">
@@ -406,6 +406,19 @@ strong{font-weight:600}
               <span class="tip">
                 <span class="tip-icon">?</span>
                 <span class="tip-box">Налоги, нотариус, регистрация и т.д. Для выбранного города: <span id="closingPct"></span>% от цены квартиры.</span>
+              </span>
+            </label>
+            <label class="lifestyle-toggle">
+              <input type="checkbox" id="outskirtToggle" onchange="updateCalc()">
+              <span class="lifestyle-box">
+                <svg class="lifestyle-check" viewBox="0 0 9 9" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <polyline points="1.5,4.5 3.5,6.5 7.5,2" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+              <span class="lifestyle-toggle-text">Не центр, вторичка</span>
+              <span class="tip">
+                <span class="tip-icon">?</span>
+                <span class="tip-box">Цена за м² вне центра в среднем на 35% ниже. Данные: Numbeo, разница Centre vs Outside Centre по выбранному городу.</span>
               </span>
             </label>
           </div>
@@ -970,6 +983,7 @@ function updateCalc() {
   const customRate = advancedMode ? parseFloat(document.getElementById('rateInput').value) : c.rate;
   const rate = (advancedMode && !isNaN(customRate)) ? customRate : c.rate;
   const closingOn = advancedMode && document.getElementById('closingToggle').checked;
+  const outskirtOn = advancedMode && document.getElementById('outskirtToggle').checked;
 
   // Income & expenses with scenarios
   let income = sal;
@@ -979,7 +993,8 @@ function updateCalc() {
 
   const defArea = c.defArea || 60;
   const area = advancedMode ? (parseInt(document.getElementById('areaInput').value) || defArea) : defArea;
-  const apt = c.priceM2 * area;
+  const pm2 = outskirtOn ? c.priceM2 * 0.65 : c.priceM2;
+  const apt = pm2 * area;
   const propType = c.house ? 'Дом' : 'Квартира';
   const gRate = c.growth / 100;
   const dp = apt * 0.2;
