@@ -282,13 +282,13 @@ strong{font-weight:600}
 <div class="container">
   <div class="sec-label">Начни с себя</div>
   <h2>Посчитай свой город</h2>
-  <p>Прежде чем продолжить - посмотри сам. Введи данные. Потом включи галочку.</p>
+  <p>Прежде чем продолжить — посмотри сам. Выбери город, введи зарплату.</p>
 
   <div class="calc-wrap">
     <div class="calc-hdr">
       <span class="lbl">Калькулятор доступности жилья</span>
       <label class="hdr-toggle" style="margin-left:auto">
-        <input type="checkbox" id="growthToggle">
+        <input type="checkbox" id="growthToggle" checked>
         <span class="growth-label">Учитывать рост цен</span>
         <span class="tip">
           <span class="tip-icon">?</span>
@@ -385,6 +385,10 @@ strong{font-weight:600}
           <div class="cf">
             <label>Площадь (м²)</label>
             <input type="number" id="areaInput" value="60" min="10" max="500" step="5" oninput="updateCalc()">
+          </div>
+          <div class="cf">
+            <label id="savedLabel">Уже накоплено (€)</label>
+            <input type="number" id="savedInput" value="0" min="0" step="1000" oninput="updateCalc()">
           </div>
           <div class="cf">
             <label>Ипотечная ставка (%)</label>
@@ -728,13 +732,18 @@ function fmt(n) {
   return _cur + Math.round(n);
 }
 
-function yearsFlat(dp, annSav) {
-  return annSav > 0 ? dp / annSav : null;
+function yearsFlat(dp, annSav, saved) {
+  saved = saved || 0;
+  const remaining = dp - saved;
+  if (remaining <= 0) return 0;
+  return annSav > 0 ? remaining / annSav : null;
 }
 
-function yearsGrowth(dp, annSav, gr) {
+function yearsGrowth(dp, annSav, gr, saved) {
+  saved = saved || 0;
+  if (saved >= dp) return 0;
   if (annSav <= 0) return null;
-  let sav = 0, target = dp, g = gr / 100;
+  let sav = saved, target = dp, g = gr / 100;
   for (let y = 1; y <= 100; y++) {
     sav += annSav;
     target *= (1 + g);
@@ -799,7 +808,7 @@ function journeyHTML(yearBuy, aptNow, aptAtBuy, salary, mortPay, totalPaid, grow
     </div>`;
 }
 
-function buildJourneyChart(yearBuy, aptNow, aptAtBuy, annSav, mortPay, dpActual, growthOn, growthRate, mortYears) {
+function buildJourneyChart(yearBuy, aptNow, aptAtBuy, annSav, mortPay, dpActual, growthOn, growthRate, mortYears, saved) {
   const wrap = document.getElementById('journeyChartWrap');
   if (journeyChartInst) { journeyChartInst.destroy(); journeyChartInst = null; }
   if (yearBuy === null) { wrap.style.display = 'none'; return; }
@@ -816,7 +825,7 @@ function buildJourneyChart(yearBuy, aptNow, aptAtBuy, annSav, mortPay, dpActual,
     dpTargetLine.push(Math.round(aptAtY * 0.2));
 
     if (y < yearBuy) {
-      savingsData.push(Math.round(annSav * y));
+      savingsData.push(Math.round((saved || 0) + annSav * y));
       mortgageData.push(null);
     } else if (y === yearBuy) {
       savingsData.push(Math.round(dpActual));
@@ -948,6 +957,7 @@ function updateCalc() {
   const c = CITIES[key];
   _cur = c.cur;
   document.getElementById('salaryLabel').textContent = `Твоя зарплата нетто (${_cur}/мес)`;
+  document.getElementById('savedLabel').textContent = `Уже накоплено (${_cur})`;
   let sal = parseFloat(document.getElementById('salaryInput').value) || c.salary;
   const growthOn = document.getElementById('growthToggle').checked;
   const lifestyleOn = document.getElementById('lifestyleToggle').checked;
@@ -978,9 +988,10 @@ function updateCalc() {
   const lifestyle = lifestyleOn ? Math.round(income * 0.20) : 0;
   const left = income - expenses - lifestyle;
   const annSav = Math.max(left, 0) * 12 * savingsRate;
+  const alreadySaved = advancedMode ? (parseFloat(document.getElementById('savedInput').value) || 0) : 0;
 
-  const yf = yearsFlat(totalUpfront, annSav);
-  const yg = yearsGrowth(totalUpfront, annSav, c.growth);
+  const yf = yearsFlat(totalUpfront, annSav, alreadySaved);
+  const yg = yearsGrowth(totalUpfront, annSav, c.growth, alreadySaved);
 
   const mortPayNow = mortPayment(apt * 0.8, rate, MORT_YEARS);
   const mortShare = Math.round(mortPayNow / income * 100);
@@ -1033,7 +1044,7 @@ function updateCalc() {
   document.getElementById('journeyContent').innerHTML =
     journeyHTML(yearBuy, apt, aptAtBuy, income, mortPayBuy, totalPaid, growthOn, MORT_YEARS);
 
-  buildJourneyChart(yearBuy, apt, aptAtBuy, annSav, mortPayBuy, dpAtBuy + closingAtBuy, growthOn, c.growth, MORT_YEARS);
+  buildJourneyChart(yearBuy, apt, aptAtBuy, annSav, mortPayBuy, dpAtBuy + closingAtBuy, growthOn, c.growth, MORT_YEARS, alreadySaved);
 
   // Growth verdict block
   const gEl = document.getElementById('calcGrowth');
